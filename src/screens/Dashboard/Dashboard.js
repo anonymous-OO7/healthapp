@@ -5,47 +5,21 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../HomeScreen/HomeScreen';
 import AccountSetup from '../AccountSetup/AccountSetup';
 
-//screens
-
-//icons
-// import HomeIcon from '../../assets/images/tabbar/HomeIcon';
-import PortfolioIcon from '../../assets/images/tabbar/PortfolioIcon';
-import WatchlistIcon from '../../assets/images/tabbar/WatchlistIcon';
-import BellIcon from '../../assets/images/tabbar/BellIcon';
-
-//active~
-import HomeActive from '../../assets/images/tabbar/homeActive.svg';
-import PortFolioActive from '../../assets/images/tabbar/portfolioActive.svg';
-import WatchlistActive from '../../assets/images/tabbar/watchlistActive.svg';
-import BellActive from '../../assets/images/tabbar/bellActive.svg';
-
 //iconsnew
 import HomeIcon from '../../assets/images/tabbar/newlogos/HomeIcon';
-import ClipIcon from '../../assets/images/tabbar/newlogos/ClipIcon';
 import StoreIcon from '../../assets/images/tabbar/newlogos/StoreIcon';
 import JobsIcon from '../../assets/images/tabbar/newlogos/JobsIcon';
-import CartIcon from '../../assets/images/tabbar/newlogos/CartIcon';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const tabHeight = windowHeight * (10 / 100);
 
-
-import {
-  responsiveHeight,
-  responsiveWidth,
-  responsiveFontSize
-} from "react-native-responsive-dimensions";
 import Comingsoon from '../../components/molecules/Comingsoon';
-
-
 
 const Tab = createBottomTabNavigator();
 
 const DashBoard = props => {
-
-
-  console.log(props , "PROPS IN DASHBOARD")
+  console.log(props, 'PROPS IN DASHBOARD');
   return (
     <Tab.Navigator
       screenOptions={{
@@ -70,25 +44,20 @@ const DashBoard = props => {
           },
         },
       }}>
-
-
-
       <Tab.Screen
         name="Home"
         children={() => <HomeScreen props={props} />}
         options={{
           tabBarIcon: ({focused}) => {
             if (focused) {
-           
-              return <HomeIcon fill= {"#7452D6"} />;
-
+              return <HomeIcon fill={'#7452D6'} />;
             } else {
-              return <HomeIcon fill= {"#333"} />;
+              return <HomeIcon fill={'#333'} />;
             }
           },
         }}
       />
-{/* 
+      {/* 
       <Tab.Screen
         name="ClipsSCreen"
         children={() => <AccountSetup props={props} />}
@@ -111,16 +80,13 @@ const DashBoard = props => {
           tabBarIcon: ({focused}) => {
             if (focused) {
               // return <WatchlistActive />;
-              return <StoreIcon fill= {"#7452D6"} />;
-
+              return <StoreIcon fill={'#7452D6'} />;
             } else {
-              return <StoreIcon fill= {"#333"} />;
+              return <StoreIcon fill={'#333'} />;
             }
           },
         }}
       />
-
-
 
       <Tab.Screen
         name="JobsScreen"
@@ -129,17 +95,13 @@ const DashBoard = props => {
           tabBarIcon: ({focused}) => {
             if (focused) {
               // return <BellActive />;
-              return <JobsIcon fill= {"#7452D6"} />;
-
+              return <JobsIcon fill={'#7452D6'} />;
             } else {
-              return <JobsIcon fill= {"#333"} />;
+              return <JobsIcon fill={'#333'} />;
             }
           },
         }}
       />
-
-
-
     </Tab.Navigator>
   );
 };

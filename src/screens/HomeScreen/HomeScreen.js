@@ -8,25 +8,28 @@ import {
   ScrollView,
   Image,
   FlatList,
+  StyleSheet,
+  Dimensions,
+  TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 
 import HomeScreenStyle from './HomeScreenStyle';
-import Button from '../../components/common/Button';
 
-import {NameSvg} from '../../assets/svgs/SvgImages';
 import LogoViewer from '../../components/common/LogoViewer';
-import Counter from '../../components/common/Counter';
-import SearchIcon from '../../assets/svgs/searchicon.svg';
 
-import {COLORS} from '../../assets/colors.js';
 import dataArray from '../../assets/data/data';
-import {windowWidth} from '../../utils/Dimensions';
+import {windowHeight, windowWidth} from '../../utils/Dimensions';
 import SearchBox from '../../components/molecules/SearchBox';
 import SearchClick from '../../components/molecules/SearchClick';
 import {PostSvg} from '../../assets/svgs/SvgImages';
 import DishCategory from '../../components/molecules/DishCategory';
 import CategoryItem from '../../components/molecules/CategoryItem';
-import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 import {
   BannerAd,
   BannerAdSize,
@@ -35,6 +38,22 @@ import {
   AdEventType,
 } from 'react-native-google-mobile-ads';
 import {useFocusEffect} from '@react-navigation/native';
+import categories from '../../assets/data/categories';
+import {useNavigation} from '@react-navigation/core';
+import {Colors} from '../../assets/colors';
+import {recipies} from '../../assets/data';
+import VegNon from '../../components/common/VegNon';
+import {
+  Help,
+  ProteinSvg,
+  ShareSvg,
+  StarRating,
+  WatchlistSvg,
+} from '../../assets/images/SvgImages';
+import {getGreeting} from '../../utils/UtilFunctions';
+
+const {width} = Dimensions.get('screen');
+const cardWidth = width / 2 - 20;
 
 const adUnitIdInter = __DEV__
   ? TestIds.INTERSTITIAL
@@ -48,253 +67,338 @@ const HomeScreen = props => {
     : 'ca-app-pub-2888315269414105/9070447874';
 
   console.log(props, 'PROPS IN Homescreen');
+  const navigation = useNavigation();
 
-  // https://www.rainforestcruises.com/guides/india-food#:~:text=Traditional%20Indian%20food%20is%20renowned,%2C%20chutneys%2C%20breads%20and%20sweets.
+  const [currentlist, setCurrentlist] = useState(dataArray);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState("all");
 
-  const [currentlist, setCurrentlist] = useState([]);
   const [loaded, setLoaded] = useState(false);
-
+  const gotoDetail = food => {
+    navigation.navigate('DetailsScreen', {
+      food: food,
+      list: recipies[food.name],
+    });
+  };
   useFocusEffect(() => {
     const unsubscribe = interstitial.addAdEventListener(
       AdEventType.LOADED,
       () => {
+        console.log('ASS LOADED');
         setLoaded(true);
       },
     );
-
-    // Start loading the interstitial straight away
     interstitial.load();
-
-    // Unsubscribe from events on unmount
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    const filteredData = dataArray.filter(item => {
-      console.log(item, 'ITEM GOT');
-      return item.istop === true;
-    });
-
-    console.log(filteredData, 'final list GOT');
-
+  const handleFilter = React.useCallback(selected_category => {
+    const filteredData =
+      selected_category == 'all'
+        ? dataArray
+        : dataArray.filter(item => {
+            return item.category === selected_category;
+          });
     setCurrentlist(filteredData);
   }, []);
 
   if (!loaded) {
-    return null;
+    return (
+      <>
+        <View
+          style={{
+            height: windowHeight,
+            width: windowWidth,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" />
+        </View>
+      </>
+    );
   }
 
   const showIntersteialAdd = () => {
     if (loaded) {
       console.log(loaded, 'truee');
       interstitial.show();
-
       setLoaded(false);
     }
   };
-  return (
-    <SafeAreaView style={HomeScreenStyle.container}>
-      <View>
-        <BannerAd
-          unitId={adUnitId}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        />
-        <ScrollView nestedScrollEnabled={true} style={{width: '100%'}}>
-          <View style={HomeScreenStyle.ovalShape} />
-          {/* Rest of your content */}
-          <View style={HomeScreenStyle.searchMainCtn}>
-            <TouchableOpacity
-              onPress={() => {
-                interstitial.show();
-              }}
-              style={HomeScreenStyle.profileButton}>
+
+  const changeListRecipies = () => {};
+  const Card = ({food}) => {
+    return (
+      <TouchableHighlight
+        underlayColor={Colors.white}
+        activeOpacity={0.9}
+        onPress={props => {
+          showIntersteialAdd();
+          console.log('gonit to nextt', props, food);
+          gotoDetail(food);
+        }}>
+        <View style={style.card}>
+          <View style={{alignItems: 'center', marginTop: responsiveHeight(1)}}>
+            <View
+              style={{
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5, // for Android
+                borderRadius: responsiveWidth(3),
+                backgroundColor: 'transparent',
+              }}>
               <Image
-                // style={HomeScreenStyle.image}
+                source={{uri: food.image}}
                 style={{
-                  width: responsiveWidth(17),
-                  height: responsiveWidth(12),
-                }}
-                resizeMode="contain"
-                source={{
-                  uri: 'https://img.freepik.com/premium-vector/avatar-profile-icon_188544-4755.jpg',
+                  height: responsiveHeight(15),
+                  width: responsiveWidth(40),
+                  borderRadius: responsiveWidth(3),
+                  backgroundColor: 'bisque',
                 }}
               />
-            </TouchableOpacity>
-            <SearchClick />
-            <TouchableOpacity>
+            </View>
+          </View>
+
+          <View
+            style={{
+              marginHorizontal: responsiveWidth(8),
+              marginTop: responsiveHeight(1),
+            }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2),
+                fontFamily: 'Rubik-Regular',
+                color: Colors.black,
+              }}
+              numberOfLines={2} // Limiting the text to 2 lines
+            >
+              {food.display}
+            </Text>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(1.8),
+                color: Colors.grey,
+                marginTop: 2,
+                fontFamily: 'Poppins-Regular',
+              }}
+              numberOfLines={2} // Limiting the text to 2 lines
+            >
+              {food.category}
+            </Text>
+          </View>
+
+          <View style={style.infoCtn}>
+            <VegNon disabled={food.veg} />
+
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <LogoViewer
-                Logosource={PostSvg}
-                containerstyle={HomeScreenStyle.logoImgContainer}
-                logostyle={HomeScreenStyle.logoImg}
+                Logosource={StarRating}
+                containerstyle={style.loginImgContainer}
+                logostyle={style.loginImg}
               />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={HomeScreenStyle.headingText}>
-            Find best recipes for cooking
-          </Text>
-        
-          <View style={HomeScreenStyle.searchBarContainer}>
-          </View>
-          <View style={HomeScreenStyle.listMainCtn}>
-            <Text style={HomeScreenStyle.categorytext}>Top Categories</Text>
-          </View>
-
-          <View style={HomeScreenStyle.listMainCtnCat}>
-            <View>
-              <CategoryItem
-                title={'Northindian'}
-                image={
-                  'https://t4.ftcdn.net/jpg/02/75/39/23/360_F_275392381_9upAWW5Rdsa4UE0CV6gRu2CwUETjzbKy.jpg'
-                }
-                props={props}
-                category={'northindian'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Breakfast'}
-                image={
-                  'https://cdn2.stylecraze.com/wp-content/uploads/2014/07/Full-English-Breakfast.jpg'
-                }
-                props={props}
-                category={'breakfast'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Biriyani'}
-                image={
-                  'https://c8.alamy.com/comp/C96752/indian-chicken-biryani-C96752.jpg'
-                }
-                props={props}
-                category={'biriyani'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Pizza'}
-                image={
-                  'https://st.depositphotos.com/1144352/3656/i/450/depositphotos_36567413-stock-photo-pizza.jpg'
-                }
-                props={props}
-                category={'pizza'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Fried rice'}
-                image={
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY2BEkErXYKCFXv4dlSJFMKxDdyKHXJEh4KQ&usqp=CAU'
-                }
-                props={props}
-                category={'friedrice'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Cake'}
-                image={
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6OBNLc9qk6KUtcVXU5oGDwGpUIsUgZxGNXw&usqp=CAU'
-                }
-                props={props}
-                category={'cake'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
+              <Text style={style.ratingText}>{food.rating}</Text>
             </View>
-
-            <View>
-              <CategoryItem
-                title={'Coffee'}
-                image={
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9wZlNlZj2nmBMyhV56cpTudHm9Bc4ab0BxA&usqp=CAU'
-                }
-                props={props}
-                category={'coffee'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Lunch'}
-                image={
-                  'https://img.freepik.com/premium-photo/indian-hindu-veg-thali-also-known-as-food-platter-is-complete-lunch-dinner-meal-closeup-selective-focus_466689-9082.jpg'
-                }
-                props={props}
-                category={'lunch'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Sweet'}
-                image={
-                  'https://st.depositphotos.com/2702761/3312/i/450/depositphotos_33121705-stock-photo-traditional-indian-sweets.jpg'
-                }
-                props={props}
-                category={'sweet'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Snack'}
-                image={
-                  'https://cablevey.com/wp-content/uploads/2020/11/What-Are-the-Different-Kinds-of-Snack-Foods.jpg'
-                }
-                props={props}
-                category={'snack'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Pickle'}
-                image={
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRndIjfGD67GAW8B2ukQGOtjLFTHB6zrxAinA&usqp=CAU'
-                }
-                props={props}
-                category={'pickle'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-
-              <CategoryItem
-                title={'Soup'}
-                image={
-                  'https://www.indianhealthyrecipes.com/wp-content/uploads/2019/06/vegetable-soup.jpg'
-                }
-                props={props}
-                category={'soup'}
-                showIntersteialAdd={showIntersteialAdd}
-              />
-            </View>
+            <LogoViewer
+              Logosource={ProteinSvg}
+              containerstyle={style.loginImgContainer}
+              logostyle={style.loginImg}
+            />
           </View>
+        </View>
+      </TouchableHighlight>
+    );
+  };
 
-          <View style={[HomeScreenStyle.listMainCtn, {marginBottom: 0}]}>
-            <Text style={HomeScreenStyle.categorytext}>Top Recipies</Text>
-          </View>
-
+  return (
+    <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
+      <View style={HomeScreenStyle.ovalShape}>
+        <View style={style.header}>
           <View>
-            <ScrollView horizontal={true} style={{width: '100%'}}>
-              <View style={[HomeScreenStyle.listMainCtn, {marginTop: 0}]}>
-                <FlatList
-                  data={currentlist}
-                  // numColumns={2}
-                  renderItem={({item}) => {
-                    return (
-                      <DishCategory
-                        props={props.props}
-                        info={item}
-                        showIntersteialAdd={showIntersteialAdd}
-                      />
-                    );
-                  }}
-                  keyExtractor={dataArray => dataArray.id.toString()}
-                  showsVerticalScrollIndicator={false}
-                />
-              </View>
-            </ScrollView>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={HomeScreenStyle.nameText}>{getGreeting()}</Text>
+            </View>
+            <Text style={HomeScreenStyle.nameText}>What do you want today</Text>
           </View>
-        </ScrollView>
+          <Image
+            source={{
+              uri: 'https://static.vecteezy.com/system/resources/previews/019/900/322/non_2x/happy-young-cute-illustration-face-profile-png.png',
+            }}
+            style={{height: 50, width: 50, borderRadius: 25}}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: responsiveHeight(1),
+            flexDirection: 'row',
+            paddingHorizontal: 20,
+          }}>
+          <SearchClick />
+          <View style={style.sortBtn}>
+            <LogoViewer
+              Logosource={Help}
+              containerstyle={style.loginImgContainer}
+              logostyle={style.loginImg}
+            />
+          </View>
+        </View>
       </View>
+      <View style={HomeScreenStyle.listMainCtn}>
+        <Text style={HomeScreenStyle.categorytext}>Top Categories</Text>
+      </View>
+      <View style={HomeScreenStyle.listMainCtnCat}>
+        <View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={style.categoriesListContainer}>
+            {categories.map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                activeOpacity={0.8}
+                onPress={() => {
+                  setSelectedCategoryIndex(category.category);
+                  handleFilter(category.category);
+                }}>
+                <View
+                  style={{
+                    backgroundColor:
+                      selectedCategoryIndex == category.category
+                        ? Colors.primary
+                        : Colors.secondary,
+                    ...style.categoryBtn,
+                  }}>
+                  <View style={style.categoryBtnImgCon}>
+                    <Image
+                      source={category.image}
+                      style={{height: 35, width: 35, resizeMode: 'cover'}}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: responsiveFontSize(1.6),
+                      marginLeft: responsiveWidth(1),
+                      fontFamily: 'Rubik-Regular',
+                      paddingRight: responsiveWidth(2),
+                      color:
+                        selectedCategoryIndex == category.category
+                          ? Colors.white
+                          : Colors.primary,
+                    }}>
+                    {category.name}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          data={currentlist}
+          renderItem={({item}) => <Card food={item} props={props} />}
+          style={{marginBottom: responsiveHeight(10)}}
+        />
+      </View>
+      <View />
     </SafeAreaView>
   );
 };
+
+const style = StyleSheet.create({
+  header: {
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
+  inputContainer: {
+    flex: 1,
+    height: 50,
+    borderRadius: 10,
+    flexDirection: 'row',
+    backgroundColor: Colors.light,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  sortBtn: {
+    width: responsiveWidth(10),
+    height: responsiveWidth(10),
+    marginLeft: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoriesListContainer: {
+    paddingVertical: responsiveHeight(2),
+    alignItems: 'center',
+    paddingHorizontal: responsiveWidth(2),
+  },
+  categoryBtn: {
+    height: responsiveHeight(6),
+    width: 'auto',
+    marginRight: 7,
+    borderRadius: 30,
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    flexDirection: 'row',
+  },
+  categoryBtnImgCon: {
+    height: 35,
+    width: 35,
+    backgroundColor: Colors.white,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    height: responsiveHeight(32),
+    width: cardWidth,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    marginTop: responsiveHeight(1),
+    borderRadius: 15,
+    elevation: 13,
+    backgroundColor: Colors.white,
+  },
+  addToCartBtn: {
+    height: 30,
+    width: 30,
+    borderRadius: 20,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoCtn: {
+    width: 'auto',
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: responsiveHeight(1),
+    marginBottom: responsiveHeight(1),
+    alignItems:"center"
+    
+  },
+  loginImgContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: responsiveWidth(6),
+  },
+  loginImg: {
+    height: responsiveHeight(3),
+    width: responsiveHeight(3),
+  },
+  ratingText: {
+    color: 'green',
+  },
+});
 
 export default HomeScreen;

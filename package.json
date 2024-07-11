@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4.6.3",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
@@ -19,13 +20,14 @@
     "react-native": "0.72.6",
     "react-native-asset": "^2.1.1",
     "react-native-elements": "^3.4.3",
+    "react-native-gesture-handler": "^2.16.2",
     "react-native-google-mobile-ads": "^12.7.1",
     "react-native-responsive-dimensions": "^3.1.1",
     "react-native-safe-area-context": "^4.7.4",
     "react-native-screens": "^3.27.0",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^13.14.0",
-    "react-native-vector-icons": "^10.0.1",
+    "react-native-vector-icons": "^10.1.0",
     "react-native-webview": "^13.6.2",
     "react-native-youtube-iframe": "^2.3.0"
   },

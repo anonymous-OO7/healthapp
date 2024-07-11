@@ -1,11 +1,5 @@
 
-
-
-
-
 export const Colors = {
-
-    
     primary: '#3498db',
     secondary: '#2ecc71',
     background: '#f2f2f2',
@@ -14,9 +8,21 @@ export const Colors = {
     slatebackground:'#7b68ee',
     black:"#000000",
     nonveg:"#dc143c",
-    veg:"#228b22"
-
-
-
-
+    veg:"#228b22",
+    white: '#fff',
+    black: '#1F222B',
+    orange: '#F55A00',
+    fadeOrange: '#FBB891',
+    blueShade: '#128FAE',
+    lightGrey: '#B2B7C6',
+    superLight: '#F7F8FC',
+    darkGrey: '#D8DAE4',
+    badge: '#E1E3E9',
+    sliderUnselect: '#EEEFF3',
+    notificationText: '#70737C',
+    dark: '#000',
+    primary: '#F9813A',
+    secondary: '#fedac5',
+    light: '#E5E5E5',
+    grey: '#908e8c',
   };

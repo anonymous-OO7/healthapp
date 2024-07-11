@@ -29,9 +29,9 @@ const VegNon = ({
           containerstyle={VegNonstyles.loginImgContainer}
           logostyle={VegNonstyles.loginImg}
         />
-        {
+        {/* {
           disabled == true ? <Text style={VegNonstyles.vegText}>VEG</Text> :<Text style={[VegNonstyles.vegText,{color:Colors.nonveg}]}>NON VEG</Text>
-        }
+        } */}
     
     </View>
   );
@@ -51,11 +51,11 @@ const VegNonstyles = StyleSheet.create({
     backgroundColor:"white",
     alignItems:"center",
     justifyContent:"center",
-    width:responsiveWidth(8)
+    width:responsiveWidth(3)
   },
   loginImg:{
-    height:responsiveHeight(4),
-    width:responsiveHeight(4),
+    height:responsiveHeight(3),
+    width:responsiveHeight(3),
 
   },
   vegText:{

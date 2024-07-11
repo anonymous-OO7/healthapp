@@ -10,6 +10,7 @@ import RecipieList from '../screens/RecipieList/RecipieList.js';
 import CategoryItems from '../screens/CategoryItems/CategoryItems.js';
 import DetailsPage from '../screens/DetailsPage/DetailsPage.js';
 import LandingScreen from '../screens/Landing/Landing.js';
+import DetailsScreen from '../screens/DetailsPage/DetailsScreen.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,8 @@ const AuthStack = () => {
       <Stack.Screen name="SearchPage" component={SearchPage} />
       <Stack.Screen name="CategoryItems" component={CategoryItems} />
       <Stack.Screen name="DetailsPage" component={DetailsPage} />
+      <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+
     </Stack.Navigator>
   );
 };

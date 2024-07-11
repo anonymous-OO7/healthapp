@@ -41,7 +41,7 @@ const SearchClick = ({onSearch}) => {
           logostyle={SearchClickstyles.logoImg}
         />
 
-    <Text style={SearchClickstyles.searchText} >Search your Lesson</Text>
+    <Text style={SearchClickstyles.searchText} >Search your Food</Text>
    
     </TouchableOpacity>
   );
@@ -54,7 +54,7 @@ const SearchClickstyles = StyleSheet.create({
     flexDirection:"row",
     alignItems:"center",
     backgroundColor:"#F2F3F8",
-    width:"70%",
+    width:"80%",
     height:responsiveHeight(6),
     borderRadius:responsiveWidth(5),
     marginLeft:responsiveWidth(1),
@@ -75,7 +75,7 @@ const SearchClickstyles = StyleSheet.create({
 
   },
 searchText:{
-    fontSize:responsiveFontSize(1.5),
+    fontSize:responsiveFontSize(2),
     fontFamily:'Poppins-Regular',
     lineHeight:responsiveFontSize(3.4),
     color:"#8193AB",

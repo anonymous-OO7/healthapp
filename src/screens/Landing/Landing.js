@@ -10,14 +10,10 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
-import landingImg from '../../assets/images/bg.png';
-
-import AppHeaderLogo from '../../components/common/AppHeaderLogo.js';
-import {COLORS} from '../../utils/color.js';
-import Button from '../../components/common/Button';
-
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {PrimaryButton} from '../../components/common/AppButton/Button';
+import {Colors} from '../../assets/colors';
+import {responsiveFontSize} from 'react-native-responsive-dimensions';
 
 const LandingScreen = () => {
   const navigation = useNavigation();
@@ -31,7 +27,7 @@ const LandingScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
       <View style={{height: 400}}>
         <Image
           style={{
@@ -44,15 +40,22 @@ const LandingScreen = () => {
       </View>
       <View style={style.textContainer}>
         <View>
-          <Text style={{fontSize: 32, fontWeight: 'bold', textAlign: 'center'}}>
+          <Text
+            style={{
+              fontSize: 32,
+              fontFamily: 'Poppins-Regular',
+              textAlign: 'center',
+              color: Colors.black,
+            }}>
             Delicious Food
           </Text>
           <Text
             style={{
               marginTop: 20,
-              fontSize: 18,
+              fontSize: responsiveFontSize(3),
               textAlign: 'center',
-              color: COLORS.grey,
+              color: Colors.black,
+              fontFamily: 'Poppins-Regular',
             }}>
             We help you to find best and delicious food
           </Text>
@@ -63,7 +66,9 @@ const LandingScreen = () => {
           <View style={style.indicator} />
         </View>
         <PrimaryButton
-          onPress={() =>{onSignIn()}}
+          onPress={() => {
+            onSignIn();
+          }}
           title="Get Started"
         />
       </View>
@@ -72,7 +77,6 @@ const LandingScreen = () => {
 };
 
 export default LandingScreen;
-
 
 const style = StyleSheet.create({
   textContainer: {
@@ -92,14 +96,14 @@ const style = StyleSheet.create({
     height: 12,
     width: 30,
     borderRadius: 10,
-    backgroundColor: COLORS.primary,
+    backgroundColor: Colors.primary,
     marginHorizontal: 5,
   },
   indicator: {
     height: 12,
     width: 12,
     borderRadius: 6,
-    backgroundColor: COLORS.grey,
+    backgroundColor: Colors.grey,
     marginHorizontal: 5,
   },
 });

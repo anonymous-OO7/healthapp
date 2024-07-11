@@ -14,7 +14,17 @@ const dataArray = [
     "category": "breakfast",
     "istop": false,
     "ingredients": ["Eggs", "Bacon", "Toast", "Butter", "Baked beans", "Mushrooms", "Tomatoes"],
-    "steps": ["Fry eggs and bacon", "Toast bread with butter", "Heat baked beans", "Sauté mushrooms and tomatoes"]
+    "steps": ["Fry eggs and bacon", "Toast bread with butter", "Heat baked beans", "Sauté mushrooms and tomatoes"],
+    "breakfast": [
+      'duoVN7_uRFI',
+      'VzEvPVL16uc',
+      'td4lg9O9JZM',
+      '8wfZdhP-AEI',
+      '0pYv9rakqGM',
+      'pqpDYRZ3pYQ',
+      'NGczXTp8FL4',
+      'irHa5fIGxE0',
+    ],
   },
   {
     "display": "Lunch (लंच टाइम)",
@@ -30,7 +40,16 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Rice", "Lentils", "Vegetables (carrot, beans, peas)", "Spices", "Wheat flour for roti"],
-    "steps": ["Cook rice", "Prepare lentils", "Stir-fry vegetables", "Make rotis"]
+    "steps": ["Cook rice", "Prepare lentils", "Stir-fry vegetables", "Make rotis"],
+    "lunch": [
+      'YwqHCDEW_uQ',
+      'BiO1SXyRAs4',
+      'nfzgVy9AjDs',
+      'wlkX7GXyOcs',
+      'tAm5bSKEDvQ',
+      'hcGrv_KX7qA',
+      'QUXXgmCr6oI',
+    ],
   },
   {
     "display": "Pakora (पकोरा)",
@@ -46,7 +65,14 @@ const dataArray = [
     "category": "snack",
     "istop": true,
     "ingredients": ["Gram flour", "Potatoes", "Onions", "Spinach", "Cauliflower", "Green chilies", "Spices (turmeric, red chili powder, salt)", "Water", "Oil for frying"],
-    "steps": ["Slice vegetables", "Mix gram flour with water, spices, and chopped vegetables to make a batter", "Heat oil in a pan", "Drop spoonfuls of batter into hot oil and fry until golden", "Drain on paper towels"]
+    "steps": ["Slice vegetables", "Mix gram flour with water, spices, and chopped vegetables to make a batter", "Heat oil in a pan", "Drop spoonfuls of batter into hot oil and fry until golden", "Drain on paper towels"],
+    "pakora": [
+      'Pr5i9K6I5bs',
+      'P_W5Tj6gEZQ',
+      'MYN093CqEHQ',
+      '7B5KEtf37ec',
+      'nprmg1yz2vg',
+    ],
   },
   {
     "display": "Chaat (चाट)",
@@ -62,7 +88,17 @@ const dataArray = [
     "category": "snack",
     "istop": false,
     "ingredients": ["Potatoes", "Chickpeas", "Tomatoes", "Onions", "Tamarind chutney", "Mint chutney", "Spices", "Crispy puri"],
-    "steps": ["Boil and chop potatoes", "Mix with chickpeas, tomatoes, onions", "Add tamarind and mint chutney", "Garnish with spices and serve with crispy puri"]
+    "steps": ["Boil and chop potatoes", "Mix with chickpeas, tomatoes, onions", "Add tamarind and mint chutney", "Garnish with spices and serve with crispy puri"],
+    "chaat": [
+      'mMdhuvi0',
+      'eFDwHxsfvWM',
+      'q35tKgg6jgg',
+      'aYADGsh0Gww',
+      'rX1duTFa-LI',
+      'UIopaItui_0',
+      'jkJGteee_ak',
+      '_eA_41QmaC4',
+    ],
   },
   {
     "display": "Vada Pav",
@@ -78,7 +114,9 @@ const dataArray = [
     "category": "snack",
     "istop": false,
     "ingredients": ["Potatoes", "Mustard seeds", "Garlic", "Turmeric", "Green chillies", "Bread rolls", "Gram flour", "Oil"],
-    "steps": ["Make spicy potato filling", "Prepare gram flour batter", "Dip potatoes in batter and fry", "Assemble in bread rolls"]
+    "steps": ["Make spicy potato filling", "Prepare gram flour batter", "Dip potatoes in batter and fry", "Assemble in bread rolls"],
+    "vadapav": ['58cHgDaw', 'C4pzmjHgqLw', 'r4saZD0J_gU', 'nENvM_ksQf8'],
+
   },
   {
     "display": "Idli (इडली)",
@@ -94,7 +132,14 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Rice", "Urad dal (black lentils)", "Salt", "Water"],
-    "steps": ["Soak rice and dal separately", "Grind to a paste", "Ferment overnight", "Steam in idli cooker"]
+    "steps": ["Soak rice and dal separately", "Grind to a paste", "Ferment overnight", "Steam in idli cooker"],
+    "idli": [
+      'dcMlG1UA-jU',
+      'JuTpG3CRVkI',
+      '0O1PvPR6Q2c',
+      'OzNeKubj0ng',
+      'BL8JiT7Vlcg',
+    ],
   },
   {
     "display": "Vada Pav (Duplicate Entry)",
@@ -126,7 +171,16 @@ const dataArray = [
     "category": "breakfast",
     "istop": true,
     "ingredients": ["Whole wheat flour", "Water", "Ghee or oil", "Salt", "Fillings like potato or paneer"],
-    "steps": ["Knead dough", "Roll out dough and add filling", "Cook on a griddle with ghee"]
+    "steps": ["Knead dough", "Roll out dough and add filling", "Cook on a griddle with ghee"],
+    "paratha": [
+      'xVl8StjYMuc',
+      'O9Bmjbq_g_c',
+      'shWX0G0rW4',
+      'A3xF2Tds-vg',
+      '00cc4HzxCok',
+      'A3xF2Tds-vg',
+      'CUixu0aNzCc',
+    ],
   },
   {
     "display": "Aloogobhi (आलू गोभी)",
@@ -142,7 +196,14 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Potatoes", "Cauliflower", "Onions", "Tomatoes", "Ginger-garlic paste", "Spices"],
-    "steps": ["Fry potatoes and cauliflower", "Sauté onions and spices", "Add tomatoes and simmer"]
+    "steps": ["Fry potatoes and cauliflower", "Sauté onions and spices", "Add tomatoes and simmer"],
+    "aloogobhi": [
+      'KMVI7NHcbNE',
+      'PhgyyJE90w8',
+      'pQn25oWpw_g',
+      'JwXMFnHUVfQ',
+      'JihdOvkxQC8',
+    ],
   },
   {
     "display": "Butter Chicken (बटर चिकन)",
@@ -158,7 +219,15 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Chicken", "Tomatoes", "Cream", "Butter", "Ginger-garlic paste", "Spices"],
-    "steps": ["Marinate chicken", "Cook in butter and spices", "Add tomato puree and cream", "Simmer until chicken is cooked"]
+    "steps": ["Marinate chicken", "Cook in butter and spices", "Add tomato puree and cream", "Simmer until chicken is cooked"],
+    "butterchiken": [
+      'JxSwBpEiYeQ',
+      'VHfhCXkJh34',
+      'a03U45jFxOI',
+      'bX7AyuNMrVY',
+      'a03U45jFxOI',
+      '6tMUbWjEWiY',
+    ],
   },
   {
     "display": "Daltadka (दाल तड़का)",
@@ -174,7 +243,14 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Lentils", "Onions", "Tomatoes", "Garlic", "Cumin seeds", "Mustard seeds", "Spices", "Oil"],
-    "steps": ["Cook lentils", "Prepare tadka with spices and garlic", "Add to cooked lentils"]
+    "steps": ["Cook lentils", "Prepare tadka with spices and garlic", "Add to cooked lentils"],
+    "daltadka": [
+      'OSDf7jE9R9A',
+      'r9BBNT3vOGw',
+      'dqdYZu04q9I',
+      '8c_scYUN5uc',
+      'GzAdszSsJ4g',
+    ],
   },
   {
     "display": "Masala Dosa (मसाला डोसा)",
@@ -190,7 +266,14 @@ const dataArray = [
     "category": "snack",
     "istop": true,
     "ingredients": ["Dosa batter", "Potatoes", "Onions", "Mustard seeds", "Curry leaves", "Turmeric", "Oil"],
-    "steps": ["Prepare dosa batter", "Make potato filling", "Cook dosa on griddle", "Fill with potato mixture"]
+    "steps": ["Prepare dosa batter", "Make potato filling", "Cook dosa on griddle", "Fill with potato mixture"],
+    "masaladosa": [
+      'gY1LXg8AnU4',
+      'J75VQSxOtdo',
+      'sX5pYdNbmgo',
+      'PFG1aeYgi7c',
+      '2Tp78cWy80w',
+    ],
   },
   {
     "display": "Sambhar (सांभर)",
@@ -206,7 +289,14 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Lentils", "Tamarind", "Mixed vegetables (okra, carrot, potato, pumpkin)", "Sambar powder", "Mustard seeds", "Curry leaves", "Turmeric", "Asafoetida"],
-    "steps": ["Cook lentils", "Soak tamarind and extract juice", "Cook vegetables in tamarind juice", "Add cooked lentils and sambar powder", "Temper with mustard seeds and curry leaves"]
+    "steps": ["Cook lentils", "Soak tamarind and extract juice", "Cook vegetables in tamarind juice", "Add cooked lentils and sambar powder", "Temper with mustard seeds and curry leaves"],
+    "sambhar": [
+      'EkJC0GgY5wk',
+      '0Vp_vhau_Js',
+      'kiPPk2UFxv0',
+      'XvvObytWWSc',
+      'DFopKA30X5c',
+    ],
   },
   {
     "display": "Dal Makhani (दाल मखनी)",
@@ -222,7 +312,14 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Whole black lentils", "Red kidney beans", "Tomatoes", "Cream", "Butter", "Ginger-garlic paste", "Spices"],
-    "steps": ["Soak lentils and beans overnight", "Cook lentils and beans with spices", "Prepare tomato puree", "Add puree to cooked lentils", "Finish with cream and butter"]
+    "steps": ["Soak lentils and beans overnight", "Cook lentils and beans with spices", "Prepare tomato puree", "Add puree to cooked lentils", "Finish with cream and butter"],
+    "dalmakhni": [
+      'f1lpCi_70sQ',
+      'mA5XjhdwJHc',
+      'o3k55z-tv9I',
+      'OA1UuT_5PJ8',
+      'ca51e7nMI2g',
+    ],
   },
   {
     "display": "Chana Masala",
@@ -238,7 +335,14 @@ const dataArray = [
     "category": "lunch",
     "istop": true,
     "ingredients": ["Chickpeas", "Onions", "Tomatoes", "Ginger-garlic paste", "Chole masala", "Green chilies", "Oil", "Spices"],
-    "steps": ["Soak chickpeas overnight", "Cook chickpeas with tea bag for color", "Sauté onions, ginger-garlic paste, and tomatoes", "Add boiled chickpeas and chole masala", "Simmer and garnish with coriander leaves"]
+    "steps": ["Soak chickpeas overnight", "Cook chickpeas with tea bag for color", "Sauté onions, ginger-garlic paste, and tomatoes", "Add boiled chickpeas and chole masala", "Simmer and garnish with coriander leaves"],
+    "chanamasala": [
+      'M-ohmJswy6A',
+      '4wXeMbTjCE',
+      'iKMI1xkU_oo',
+      '3Vf5_St-DEo',
+      'EL9X-P98m2Q',
+    ],
   },
 
   {
@@ -255,7 +359,14 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Paneer (cottage cheese)", "Tomatoes", "Cashews", "Cream", "Butter", "Spices (cardamom, cumin, coriander powder)", "Ginger-garlic paste"],
-    "steps": ["Fry paneer cubes", "Prepare tomato-cashew paste", "Cook paste with spices and cream", "Add paneer and simmer"]
+    "steps": ["Fry paneer cubes", "Prepare tomato-cashew paste", "Cook paste with spices and cream", "Add paneer and simmer"],
+    "shaipaneer": [
+      'G3-EASdBTOU',
+      'inVClSNYBQ4',
+      'W3GlgT47U-w',
+      'EbpSHiRRK7I',
+      'NftwSFnzTAg',
+    ],
   },
   {
     "display": "Rogan Josh (रोगन जोश)",
@@ -271,7 +382,9 @@ const dataArray = [
     "category": "biriyani",
     "istop": false,
     "ingredients": ["Mutton", "Yogurt", "Onions", "Ginger-garlic paste", "Kashmiri red chili powder", "Fennel powder", "Mustard oil"],
-    "steps": ["Marinate mutton in yogurt and spices", "Fry onions in mustard oil", "Add mutton and cook", "Add water and simmer until tender"]
+    "steps": ["Marinate mutton in yogurt and spices", "Fry onions in mustard oil", "Add mutton and cook", "Add water and simmer until tender"],
+    "roganjosh": ['ZaZNZdehT0E', 'g_hvkyYPAMQ', 'ZaZNZdehT0E'],
+
   },
   {
     "display": "Tandoori Chicken (तंदुरी चिकन)",
@@ -287,7 +400,15 @@ const dataArray = [
     "category": "lunch",
     "istop": false,
     "ingredients": ["Chicken", "Yogurt", "Ginger-garlic paste", "Tandoori masala", "Red chili powder", "Lemon juice", "Oil"],
-    "steps": ["Marinate chicken in yogurt and spices", "Refrigerate for few hours", "Skewer and cook in tandoor or oven", "Serve with lemon wedges and onions"]
+    "steps": ["Marinate chicken in yogurt and spices", "Refrigerate for few hours", "Skewer and cook in tandoor or oven", "Serve with lemon wedges and onions"],
+    "tandurichiken": [
+      'A3lcRok1zf8',
+      'ieWpaZXi_Vo',
+      'ieWpaZXi_Vo',
+      'Ec_u7AMBtZI',
+      'ShNrmPtW8G0',
+      'V7nqwcVBaBs',
+    ],
   }
 ,
 {
@@ -304,7 +425,14 @@ const dataArray = [
   "category": "lunch",
   "istop": false,
   "ingredients": ["Lamb or pork", "Vinegar", "Garlic", "Ginger", "Kashmiri red chili", "Spices (turmeric, cumin, mustard seeds)", "Oil"],
-  "steps": ["Marinate meat in vinegar and spices", "Fry ginger and garlic", "Add marinated meat and cook", "Simmer until tender"]
+  "steps": ["Marinate meat in vinegar and spices", "Fry ginger and garlic", "Add marinated meat and cook", "Simmer until tender"],
+  "vinadaloo": [
+    'gJQTjIxZSms',
+    '7KDt6ZDYJpQ',
+    '6nqsPZ1sjc4',
+    '06kiyyiUhuU',
+    'SC8vEAJmtoY',
+  ],
 },
 {
   "display": "Malabar Fish Curry (मालाबार मछली करी)",
@@ -320,7 +448,14 @@ const dataArray = [
   "category": "lunch",
   "istop": false,
   "ingredients": ["Fish (like kingfish or mackerel)", "Coconut milk", "Tamarind paste", "Green chilies", "Mustard seeds", "Curry leaves", "Turmeric powder"],
-  "steps": ["Marinate fish in turmeric and salt", "Fry mustard seeds and curry leaves", "Add coconut milk and tamarind", "Add fish and simmer until cooked"]
+  "steps": ["Marinate fish in turmeric and salt", "Fry mustard seeds and curry leaves", "Add coconut milk and tamarind", "Add fish and simmer until cooked"],
+  "malabarfishcurry": [
+    '7_PcF2WwM',
+    'Z4vJBZkOO14',
+    'RxXS2QVmMVg',
+    'Omkztx5rHBM',
+    '6lUOWz8rULY',
+  ],
 },
 {
   "display": "Biriyani (बिरयानी)",
@@ -336,7 +471,14 @@ const dataArray = [
   "category": "biriyani",
   "istop": true,
   "ingredients": ["Basmati rice", "Chicken or mutton", "Yogurt", "Onions", "Tomatoes", "Ginger-garlic paste", "Biriyani masala", "Saffron", "Mint leaves", "Coriander leaves"],
-  "steps": ["Marinate meat in yogurt and spices", "Fry onions", "Cook rice separately", "Layer rice and meat", "Garnish with mint and coriander leaves", "Cook on low heat until done"]
+  "steps": ["Marinate meat in yogurt and spices", "Fry onions", "Cook rice separately", "Layer rice and meat", "Garnish with mint and coriander leaves", "Cook on low heat until done"],
+  "biriyani": [
+    'jjmR9C_X7LY',
+    '95BCU1n268w',
+    'YTYtKuLwl9U',
+    'E_gWBBjYkjE',
+    '6XlMguO9r-M',
+  ],
 },
 {
   "display": "Samosa (समोसा)",
@@ -352,7 +494,15 @@ const dataArray = [
   "category": "snack",
   "istop": true,
   "ingredients": ["Potatoes", "Green peas", "Spices (cumin, coriander, garam masala)", "Green chilies", "Flour for dough", "Oil for frying"],
-  "steps": ["Boil and mash potatoes", "Cook peas with spices", "Make dough", "Fill dough with potato-peas mixture", "Shape into samosas and fry"]
+  "steps": ["Boil and mash potatoes", "Cook peas with spices", "Make dough", "Fill dough with potato-peas mixture", "Shape into samosas and fry"],
+  "samosa": [
+    'EKPAfUCn_Jo',
+    'IEdVmXpjGcI',
+    'JgV8j4N73uc',
+    'AAm95jaoAJc',
+    '3OZn-iCGf5s',
+    'W0zDu1o74Uc',
+  ],
 },
 {
   "display": "Ras Malai (रसमलाई)",
@@ -368,7 +518,15 @@ const dataArray = [
   "category": "sweet",
   "istop": true,
   "ingredients": ["Milk", "Lemon juice or vinegar", "Sugar", "Cardamom", "Saffron", "Pistachios for garnishing"],
-  "steps": ["Curdle milk with lemon juice to make chenna", "Knead chenna and form into discs", "Boil in sugar syrup", "Soak in thickened milk flavored with cardamom and saffron", "Garnish with pistachios"]
+  "steps": ["Curdle milk with lemon juice to make chenna", "Knead chenna and form into discs", "Boil in sugar syrup", "Soak in thickened milk flavored with cardamom and saffron", "Garnish with pistachios"],
+  "rasmalai": [
+    'znefLMNyVE8',
+    '9mm8my_NLlY',
+    'LECpZPkP9Wk',
+    '9mm8my_NLlY',
+    '_tDTAfrVIRc',
+    'B34vrOtsFII',
+  ],
 },
 {
   "display": "Kulfi (कुल्फी)",
@@ -384,7 +542,14 @@ const dataArray = [
   "category": "sweet",
   "istop": false,
   "ingredients": ["Milk", "Sugar", "Cardamom", "Pistachios", "Almonds"],
-  "steps": ["Boil milk until thickened", "Add sugar and cardamom", "Mix in chopped nuts", "Pour into molds and freeze"]
+  "steps": ["Boil milk until thickened", "Add sugar and cardamom", "Mix in chopped nuts", "Pour into molds and freeze"],
+  "kulfi": [
+    'f6D7A6-QNl8',
+    '34TQWHf_e8s',
+    '6LHoeSrR6Zk',
+    'anCXzrggN98',
+    'wUBWl8baJjQ',
+  ],
 },
 {
   "display": "Gulab Jamun (गुलाब जामुन)",
@@ -400,7 +565,14 @@ const dataArray = [
   "category": "sweet",
   "istop": false,
   "ingredients": ["Milk powder", "Flour", "Baking powder", "Ghee", "Milk", "Sugar", "Cardamom", "Rose water"],
-  "steps": ["Mix milk powder, flour, and baking powder", "Form a dough with ghee and milk", "Make small balls and deep fry", "Prepare sugar syrup with cardamom and rose water", "Soak fried balls in syrup"]
+  "steps": ["Mix milk powder, flour, and baking powder", "Form a dough with ghee and milk", "Make small balls and deep fry", "Prepare sugar syrup with cardamom and rose water", "Soak fried balls in syrup"],
+  "gulabjamun": [
+    'QFvd7u_YjVk',
+    'VVhs1wj9DhU',
+    'aUFO-YnWslw',
+    'L-aS3XKW0ew',
+    'CE1ne6zc5nA',
+  ],
 },
 {
   "display": "Barfi (बर्फी)",
@@ -416,7 +588,14 @@ const dataArray = [
   "category": "sweet",
   "istop": false,
   "ingredients": ["Milk powder", "Condensed milk", "Ghee", "Cardamom powder", "Nuts for garnishing"],
-  "steps": ["Mix milk powder and condensed milk", "Cook in ghee until it forms a dough", "Flatten on a tray and cut into squares", "Garnish with nuts"]
+  "steps": ["Mix milk powder and condensed milk", "Cook in ghee until it forms a dough", "Flatten on a tray and cut into squares", "Garnish with nuts"],
+  "barfi": [
+    'ktREiOWb_Bw',
+    '9Ie2ncXp1Wc',
+    'LxC3OVfXihw',
+    'DaM1hN70lvk',
+    'KDzHcXAOQSw',
+  ],
 },
 {
   "display": "Lassi (लस्सी)",
@@ -432,7 +611,15 @@ const dataArray = [
   "category": "sweet",
   "istop": false,
   "ingredients": ["Yogurt", "Water", "Sugar", "Cardamom powder", "Saffron", "Pistachios"],
-  "steps": ["Blend yogurt, water, and sugar", "Add cardamom powder", "Garnish with saffron and pistachios", "Serve chilled"]
+  "steps": ["Blend yogurt, water, and sugar", "Add cardamom powder", "Garnish with saffron and pistachios", "Serve chilled"],
+  "lassi": [
+    'g4As2DDoUVI',
+    'SlqpgRCdSyo',
+    'vKn1b9G1BjE',
+    'kJxBtbjTef0',
+    'c_IxCZrrHh8',
+    'MX2F5rQwpsM',
+  ],
 },
 {
   "display": "Pastas (पास्ता)",
@@ -448,7 +635,15 @@ const dataArray = [
   "category": "snack",
   "istop": false,
   "ingredients": ["Pasta", "Olive oil", "Garlic", "Tomatoes", "Basil", "Parmesan cheese"],
-  "steps": ["Boil pasta", "Sauté garlic in olive oil", "Add tomatoes and cook", "Mix in cooked pasta", "Garnish with basil and parmesan cheese"]
+  "steps": ["Boil pasta", "Sauté garlic in olive oil", "Add tomatoes and cook", "Mix in cooked pasta", "Garnish with basil and parmesan cheese"],
+  "pastas": [
+    'yVDz0Av-s2A',
+    'eQKxA4Fca-c',
+    'SoPgnUZMBXU',
+    'MGFMf1e_j8',
+    '3mKugV29AOo',
+    'bcnPfcJnYr0',
+  ],
 },
 {
   "display": "Fruit juices (फलों के रस)",
@@ -464,7 +659,14 @@ const dataArray = [
   "category": "snack",
   "istop": false,
   "ingredients": ["Assorted fruits (oranges, apples, grapes, etc.)", "Water", "Sugar (optional)", "Ice cubes"],
-  "steps": ["Wash and cut fruits", "Juice the fruits", "Strain if necessary", "Add water and sugar to taste", "Serve with ice cubes"]
+  "steps": ["Wash and cut fruits", "Juice the fruits", "Strain if necessary", "Add water and sugar to taste", "Serve with ice cubes"],
+  "fruitjuices": [
+    'HYeGy9yTbsM',
+    'DqeBeDwVX6Y',
+    'ljagZW5tY-8',
+    'RXHQn2mGLbs',
+    'WlxOy62n584',
+  ],
 },
 {
   "display": "Naan (नान)",
@@ -480,7 +682,14 @@ const dataArray = [
   "category": "lunch",
   "istop": false,
   "ingredients": ["Flour", "Yeast", "Sugar", "Salt", "Yogurt", "Water", "Ghee"],
-  "steps": ["Dissolve yeast in water with sugar", "Mix flour, salt, yogurt, and yeast mixture", "Knead into dough and let it rise", "Roll out and cook in a tandoor or on a skillet", "Brush with ghee before serving"]
+  "steps": ["Dissolve yeast in water with sugar", "Mix flour, salt, yogurt, and yeast mixture", "Knead into dough and let it rise", "Roll out and cook in a tandoor or on a skillet", "Brush with ghee before serving"],
+  "naan": [
+    'uBmiX-fer5o',
+    'X59JECzaUU4',
+    'X59JECzaUU4',
+    'WnkTTvAVisU',
+    'ls36bJs9-YI',
+  ],
 }
   ];
   

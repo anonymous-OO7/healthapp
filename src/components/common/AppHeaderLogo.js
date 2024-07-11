@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, View, Text, StyleSheet} from 'react-native';
 
 import AppLogo from '../../assets/images/mask.png';
-import {COLORS} from '../../utils/color.js';
+import { Colors } from '../../assets/colors';
 
 const AppHeaderLogo = () => {
   return (
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     bottom: 15,
     zIndex: 2,
     fontSize: 40,
-    color: COLORS.white,
+    color: Colors.white,
     textAlign: 'center',
   },
 });
