@@ -20,12 +20,12 @@ import {
 import DishCategory from '../../components/molecules/DishCategory';
 import {Colors} from '../../assets/colors';
 import dataArray from '../../assets/data/data';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const CategoryItems = props => {
-  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-2888315269414105/1986148865';
-
+  const adUnitId = __DEV__
+    ? TestIds.ADAPTIVE_BANNER
+    : 'ca-app-pub-2888315269414105/1986148865';
 
   const categorycurrent = props.route.params?.category;
   console.log(props, categorycurrent, 'props GOR');
@@ -55,10 +55,10 @@ const CategoryItems = props => {
 
   return (
     <View style={styles.containermain}>
-        <BannerAd
-      unitId={adUnitId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-    />
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
       <FlatList
         data={currentlist}
         // numColumns={2}
