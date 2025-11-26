@@ -1,0 +1,99 @@
+{
+  "recipe": {
+    "ingredients": "Ingredients",
+    "steps": "Steps",
+    "nutrition": "Nutrition",
+    "reviews": "Reviews",
+    "prepTime": "Prep Time",
+    "cookTime": "Cook Time",
+    "servings": "Servings",
+    "difficulty": "Difficulty",
+    "calories": "Calories",
+    "similar": "Similar Recipes"
+  },
+  "items": {
+    "breakfast": {
+      "name": "Breakfast",
+      "description": "Start your day with energy"
+    },
+    "lunch": { "name": "Lunch", "description": "Midday meal" },
+    "pakora": {
+      "name": "Pakora",
+      "description": "Deep-fried snack made with gram flour"
+    },
+    "chaat": { "name": "Chaat", "description": "Tangy and spicy street food" },
+    "vadapav": {
+      "name": "Vada Pav",
+      "description": "Mumbai's favorite street food"
+    },
+    "idli": { "name": "Idli", "description": "Soft steamed rice cakes" },
+    "paratha": { "name": "Paratha", "description": "Indian flatbread" },
+    "aloogobhi": {
+      "name": "Aloo Gobhi",
+      "description": "Potato and cauliflower curry"
+    },
+    "butterchiken": {
+      "name": "Butter Chicken",
+      "description": "Creamy tomato-based chicken curry"
+    },
+    "daltadka": {
+      "name": "Dal Tadka",
+      "description": "Tempered yellow lentils"
+    },
+    "masaladosa": {
+      "name": "Masala Dosa",
+      "description": "Crispy crepe with potato filling"
+    },
+    "sambhar": {
+      "name": "Sambhar",
+      "description": "South Indian lentil vegetable stew"
+    },
+    "dalmakhni": {
+      "name": "Dal Makhni",
+      "description": "Creamy black lentil curry"
+    },
+    "chanamasala": {
+      "name": "Chana Masala",
+      "description": "Spiced chickpea curry"
+    },
+    "shaipaneer": {
+      "name": "Shahi Paneer",
+      "description": "Royal cottage cheese curry"
+    },
+    "roganjosh": { "name": "Rogan Josh", "description": "Kashmiri lamb curry" },
+    "tandurichiken": {
+      "name": "Tandoori Chicken",
+      "description": "Spiced grilled chicken"
+    },
+    "vinadaloo": { "name": "Vindaloo", "description": "Spicy Goan curry" },
+    "malabarfishcurry": {
+      "name": "Malabar Fish Curry",
+      "description": "Kerala style fish curry"
+    },
+    "biriyani": {
+      "name": "Biryani",
+      "description": "Fragrant layered rice dish"
+    },
+    "samosa": {
+      "name": "Samosa",
+      "description": "Crispy fried pastry with filling"
+    },
+    "rasmalai": {
+      "name": "Rasmalai",
+      "description": "Soft cheese patties in sweet milk"
+    },
+    "kulfi": { "name": "Kulfi", "description": "Traditional Indian ice cream" },
+    "gulabjamun": {
+      "name": "Gulab Jamun",
+      "description": "Sweet milk dumplings in syrup"
+    },
+    "barfi": { "name": "Barfi", "description": "Indian milk fudge sweet" },
+    "lassi": { "name": "Lassi", "description": "Refreshing yogurt drink" },
+    "pastas": { "name": "Pasta", "description": "Italian pasta dishes" },
+    "fruitjuices": {
+      "name": "Fruit Juices",
+      "description": "Fresh fruit beverages"
+    },
+    "naan": { "name": "Naan", "description": "Soft leavened Indian bread" }
+  }
+}

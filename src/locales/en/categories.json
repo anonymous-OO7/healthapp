@@ -1,0 +1,46 @@
+{
+  "title": "Categories",
+  "explore": "Explore Categories",
+  "items": {
+    "all": { "name": "All", "description": "All recipes" },
+    "breakfast": { "name": "Breakfast", "description": "Morning meals" },
+    "lunch": { "name": "Lunch", "description": "Midday meals" },
+    "dinner": { "name": "Dinner", "description": "Evening meals" },
+    "snack": { "name": "Snacks", "description": "Quick bites" },
+    "snacks": { "name": "Snacks", "description": "Quick bites" },
+    "desserts": { "name": "Desserts", "description": "Sweet treats" },
+    "sweet": { "name": "Sweets", "description": "Traditional Indian sweets" },
+    "sweets": { "name": "Sweets", "description": "Traditional Indian sweets" },
+    "beverages": {
+      "name": "Beverages",
+      "description": "Drinks and refreshments"
+    },
+
+    "biriyani": { "name": "Biryani", "description": "Rice dishes" },
+    "curries": { "name": "Curries", "description": "Main course curries" },
+    "bread": { "name": "Breads", "description": "Indian breads" },
+    "south_indian": {
+      "name": "South Indian",
+      "description": "South Indian cuisine"
+    },
+    "north_indian": {
+      "name": "North Indian",
+      "description": "North Indian cuisine"
+    },
+    "street_food": {
+      "name": "Street Food",
+      "description": "Popular street snacks"
+    },
+    "non_veg": { "name": "Non-Veg", "description": "Non-vegetarian dishes" },
+    "veg": { "name": "Vegetarian", "description": "Vegetarian dishes" },
+
+    "healthy": { "name": "Healthy", "description": "Healthy options" },
+    "pizza": { "name": "Pizza", "description": "Delicious Pizzas" },
+    "burger": { "name": "Burger", "description": "Tasty Burgers" },
+    "rolls": { "name": "Rolls", "description": "Wraps and Rolls" },
+    "chinese": { "name": "Chinese", "description": "Chinese Cuisine" },
+    "sandwitch": { "name": "Sandwich", "description": "Breakfast Sandwiches" },
+    "cakes": { "name": "Cakes", "description": "Bakery items" },
+    "momos": { "name": "Momos", "description": "Steamed dumplings" }
+  }
+}

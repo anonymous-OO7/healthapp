@@ -8,44 +8,64 @@ import {
   Image,
   FlatList,
   TouchableHighlight,
-  Dimensions,
   StatusBar,
+  Modal,
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/core';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { useTranslation } from 'react-i18next';
 
 // Styles & Assets
 import HomeScreenStyle from './HomeScreenStyle';
 import { Colors } from '../../assets/colors';
 import dataArray from '../../assets/data/data';
 import categories from '../../assets/data/categories';
-import { recipies } from '../../assets/data'; // Check spelling 'recipies' vs 'recipes'
-import { getGreeting } from '../../utils/UtilFunctions';
+import { recipies } from '../../assets/data';
 
 // Components
 import LogoViewer from '../../components/common/LogoViewer';
 import SearchClick from '../../components/molecules/SearchClick';
 import VegNon from '../../components/common/VegNon';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
 
 // Icons
 import { Help, ProteinSvg, StarRating } from '../../assets/images/SvgImages';
 
-const { width } = Dimensions.get('window');
-
 /**
- * Render Item for the Food Card
- * Extracted outside for better performance (avoids re-creation on render)
+ * Food Card Component
  */
-const FoodCard = ({ food, onPress }) => {
+const FoodCard = ({ food, onPress, t }) => {
+  // 1. Get Localized Recipe Name
+  const getLocalizedRecipeName = () => {
+    const safeName = (food.name || '').toLowerCase().replace(/\s+/g, '');
+    const key = `recipes.items.${safeName}.name`;
+    const translated = t(key, { defaultValue: '' });
+    return translated && translated !== key
+      ? translated
+      : food.display || food.name;
+  };
+
+  // 2. Get Localized Category Name
+  const getLocalizedCategory = () => {
+    const safeCategory = (food.category || '')
+      .toLowerCase()
+      .replace(/\s+/g, '');
+    const key = `categories.items.${safeCategory}.name`;
+    const translated = t(key, { defaultValue: '' });
+    return translated && translated !== key
+      ? translated
+      : food.category.charAt(0).toUpperCase() + food.category.slice(1);
+  };
+
   return (
     <TouchableHighlight
-      underlayColor={Colors.white}
-      activeOpacity={0.95}
+      underlayColor="transparent"
+      activeOpacity={0.9}
       onPress={() => onPress(food)}
       style={HomeScreenStyle.cardContainer}
     >
-      <View style={{ flex: 1 }}>
+      <View style={HomeScreenStyle.cardInner}>
         {/* Image Section */}
         <View style={HomeScreenStyle.cardImageContainer}>
           <Image
@@ -53,59 +73,96 @@ const FoodCard = ({ food, onPress }) => {
             style={HomeScreenStyle.cardImage}
             resizeMode="cover"
           />
+          {/* Optional: Rating Badge on Image */}
+          <View style={HomeScreenStyle.ratingBadge}>
+            <LogoViewer
+              Logosource={StarRating}
+              containerstyle={{ width: 10, height: 10 }}
+              logostyle={{ width: 10, height: 10 }}
+            />
+            <Text style={HomeScreenStyle.ratingBadgeText}>{food.rating}</Text>
+          </View>
         </View>
 
         {/* Text Section */}
         <View style={HomeScreenStyle.cardContent}>
           <Text style={HomeScreenStyle.cardTitle} numberOfLines={1}>
-            {food.display}
+            {getLocalizedRecipeName()}
           </Text>
           <Text style={HomeScreenStyle.cardSubTitle} numberOfLines={1}>
-            {food.category}
+            {getLocalizedCategory()}
           </Text>
-        </View>
 
-        {/* Footer Info Section - Pushed to bottom of card */}
-        <View style={HomeScreenStyle.cardFooter}>
-          {/* Veg/Non-Veg Icon */}
-          <VegNon disabled={food.veg} />
-
-          {/* Rating */}
-          <View style={HomeScreenStyle.ratingContainer}>
-            <LogoViewer
-              Logosource={StarRating}
-              containerstyle={{ width: 12, height: 12 }}
-              logostyle={HomeScreenStyle.iconSmall}
-            />
-            <Text style={HomeScreenStyle.ratingText}>{food.rating}</Text>
+          {/* Footer Info (Veg/Time/Cals) */}
+          <View style={HomeScreenStyle.cardFooter}>
+            <View style={HomeScreenStyle.metaRow}>
+              <VegNon disabled={food.veg} size={14} />
+              <View style={HomeScreenStyle.verticalDivider} />
+              <Text style={HomeScreenStyle.timeText}>
+                {food.deliveryTime || '30 min'}
+              </Text>
+            </View>
           </View>
-
-          {/* Protein/Calories Icon */}
-          <LogoViewer
-            Logosource={ProteinSvg}
-            containerstyle={{ width: 14, height: 14 }}
-            logostyle={HomeScreenStyle.iconSmall}
-          />
         </View>
       </View>
     </TouchableHighlight>
   );
 };
 
+/**
+ * Language Toggle Button Component
+ */
+const LanguageToggleButton = ({ currentLang, onPress }) => {
+  return (
+    <TouchableOpacity
+      style={HomeScreenStyle.languageButton}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <Text style={HomeScreenStyle.languageButtonText}>
+        {currentLang === 'en' ? ' 🇺🇸' : '🇮🇳'}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+/**
+ * Main Home Screen
+ */
 const HomeScreen = props => {
   const navigation = useNavigation();
+  const { t, i18n } = useTranslation();
+
   const [currentList, setCurrentList] = useState(dataArray);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState('all');
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
 
-  // Navigation Handler
+  const getLocalizedGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) return t('greeting.morning');
+    if (hour >= 12 && hour < 17) return t('greeting.afternoon');
+    if (hour >= 17 && hour < 21) return t('greeting.evening');
+    return t('greeting.night');
+  };
+
+  const getLocalizedCategoryName = categoryKey => {
+    const safeCategory = (categoryKey || '').toLowerCase().replace(/\s+/g, '');
+    const translationKey = `categories.items.${safeCategory}.name`;
+    const translated = t(translationKey, { defaultValue: '' });
+    return translated && translated !== translationKey
+      ? translated
+      : categoryKey === 'all'
+      ? 'All'
+      : categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
+  };
+
   const gotoDetail = food => {
     navigation.navigate('DetailsScreen', {
       food: food,
-      list: recipies[food.name] || [], // Handle potential undefined
+      list: recipies[food.name] || [],
     });
   };
 
-  // Filter Logic
   const handleFilter = useCallback(selected_category => {
     setSelectedCategoryIndex(selected_category);
     if (selected_category === 'all') {
@@ -118,53 +175,64 @@ const HomeScreen = props => {
     }
   }, []);
 
-  /**
-   * Header Component
-   * Contains Greeting, Search, and Horizontal Categories
-   * This scrolls WITH the list.
-   */
+  // --- Header Component ---
   const renderHeader = () => (
-    <View>
-      {/* Top Section: Greeting & Profile */}
-      <View style={HomeScreenStyle.headerContainer}>
-        <View>
-          <Text style={HomeScreenStyle.greetingText}>{getGreeting()},</Text>
+    <View style={HomeScreenStyle.headerWrapper}>
+      {/* Top Section */}
+      <View style={HomeScreenStyle.topBar}>
+        <View style={{ flex: 1 }}>
+          <Text style={HomeScreenStyle.greetingText}>
+            {getLocalizedGreeting()},
+          </Text>
           <Text style={HomeScreenStyle.mainTitleText}>
-            What do you want today?
+            {t('home.whatDoYouWant')}
           </Text>
         </View>
-        <Image
-          source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/019/900/322/non_2x/happy-young-cute-illustration-face-profile-png.png',
-          }}
-          style={HomeScreenStyle.profileImage}
-        />
+
+        <View style={HomeScreenStyle.topBarRight}>
+          <LanguageToggleButton
+            currentLang={i18n.language}
+            onPress={() => setShowLanguageModal(true)}
+          />
+          <Image
+            source={{
+              uri: 'https://static.vecteezy.com/system/resources/previews/019/900/322/non_2x/happy-young-cute-illustration-face-profile-png.png',
+            }}
+            style={HomeScreenStyle.profileImage}
+          />
+        </View>
       </View>
 
       {/* Search Section */}
-      <View style={HomeScreenStyle.searchContainer}>
-        <View style={{ flex: 1 }}>
-          <SearchClick />
+      <View style={HomeScreenStyle.searchSection}>
+        <View style={HomeScreenStyle.searchBoxWrapper}>
+          <SearchClick placeholder={t('search.placeholder')} />
         </View>
-        <TouchableOpacity
-          style={HomeScreenStyle.sortButton}
-          activeOpacity={0.8}
-        >
+        <TouchableOpacity style={HomeScreenStyle.filterBtn} activeOpacity={0.8}>
+          {/* Replaced Help with Filter icon concept (sliders) */}
           <LogoViewer
             Logosource={Help}
             containerstyle={{ width: 20, height: 20 }}
-            logostyle={{ width: 20, height: 20 }}
+            logostyle={{ width: 20, height: 20, tintColor: Colors.white }}
           />
         </TouchableOpacity>
       </View>
 
-      {/* Categories Section */}
-      <Text style={HomeScreenStyle.sectionTitle}>Top Categories</Text>
+      {/* Categories */}
+      <View style={HomeScreenStyle.sectionHeader}>
+        <Text style={HomeScreenStyle.sectionTitle}>
+          {t('home.topCategories')}
+        </Text>
+        <TouchableOpacity>
+          <Text style={HomeScreenStyle.seeAllText}>{t('home.seeAll')}</Text>
+        </TouchableOpacity>
+      </View>
+
       <View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={HomeScreenStyle.categoryScrollContainer}
+          contentContainerStyle={HomeScreenStyle.categoryListContainer}
         >
           {categories.map((category, index) => {
             const isSelected = selectedCategoryIndex === category.category;
@@ -173,70 +241,93 @@ const HomeScreen = props => {
                 key={index}
                 activeOpacity={0.8}
                 onPress={() => handleFilter(category.category)}
+                style={[
+                  HomeScreenStyle.categoryPill,
+                  isSelected && HomeScreenStyle.categoryPillSelected,
+                ]}
               >
-                <View
+                <View style={HomeScreenStyle.categoryIconBox}>
+                  <Image
+                    source={category.image}
+                    style={HomeScreenStyle.categoryIcon}
+                  />
+                </View>
+                <Text
                   style={[
-                    HomeScreenStyle.categoryBtn,
-                    {
-                      backgroundColor: isSelected
-                        ? Colors.primary
-                        : Colors.secondary,
-                    },
+                    HomeScreenStyle.categoryText,
+                    isSelected && HomeScreenStyle.categoryTextSelected,
                   ]}
                 >
-                  <View style={HomeScreenStyle.categoryIconContainer}>
-                    <Image
-                      source={category.image}
-                      style={{ height: 25, width: 25, resizeMode: 'contain' }}
-                    />
-                  </View>
-                  <Text
-                    style={[
-                      HomeScreenStyle.categoryText,
-                      { color: isSelected ? Colors.white : Colors.primary },
-                    ]}
-                  >
-                    {category.name}
-                  </Text>
-                </View>
+                  {getLocalizedCategoryName(category.category)}
+                </Text>
               </TouchableOpacity>
             );
           })}
         </ScrollView>
       </View>
+
+      {/* Popular Recipes Title */}
+      <View style={[HomeScreenStyle.sectionHeader, { marginTop: 20 }]}>
+        <Text style={HomeScreenStyle.sectionTitle}>
+          {t('home.popularRecipes')}
+        </Text>
+        <TouchableOpacity>
+          <Text style={HomeScreenStyle.seeAllText}>{t('home.seeAll')}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const renderEmptyList = () => (
+    <View style={HomeScreenStyle.emptyContainer}>
+      <Image
+        source={{
+          uri: 'https://cdn-icons-png.flaticon.com/512/11329/11329060.png',
+        }}
+        style={{ width: 100, height: 100, opacity: 0.5, marginBottom: 20 }}
+      />
+      <Text style={HomeScreenStyle.emptyText}>{t('messages.noResults')}</Text>
+      <TouchableOpacity
+        style={HomeScreenStyle.resetButton}
+        onPress={() => handleFilter('all')}
+      >
+        <Text style={HomeScreenStyle.resetButtonText}>{t('filters.all')}</Text>
+      </TouchableOpacity>
     </View>
   );
 
   return (
     <View style={HomeScreenStyle.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={Colors.slatebackground}
-      />
-
-      {/* Fixed Decorative Background */}
-      <View style={HomeScreenStyle.ovalBackground} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
 
       <SafeAreaView style={{ flex: 1 }}>
         <FlatList
           data={currentList}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => `recipe-${item.id || index}`}
           numColumns={2}
           showsVerticalScrollIndicator={false}
-          // Use the Header Component here so it scrolls with content
           ListHeaderComponent={renderHeader}
+          ListEmptyComponent={renderEmptyList}
           renderItem={({ item }) => (
-            <FoodCard food={item} onPress={gotoDetail} />
+            <FoodCard food={item} onPress={gotoDetail} t={t} />
           )}
-          // Padding for Grid items to be centered
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            paddingHorizontal: responsiveWidth(2),
-          }}
-          // Vital: Add padding at bottom so Floating Tab Bar doesn't cover content
-          contentContainerStyle={{ paddingBottom: 100 }}
+          columnWrapperStyle={HomeScreenStyle.columnWrapper}
+          contentContainerStyle={HomeScreenStyle.flatListContent}
         />
       </SafeAreaView>
+
+      <Modal
+        visible={showLanguageModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowLanguageModal(false)}
+      >
+        <View style={HomeScreenStyle.modalOverlay}>
+          <View style={HomeScreenStyle.modalContent}>
+            <LanguageSwitcher onClose={() => setShowLanguageModal(false)} />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

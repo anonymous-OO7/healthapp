@@ -1,0 +1,94 @@
+{
+  "app": {
+    "name": "रेसिपी बुक",
+    "tagline": "स्वादिष्ट व्यंजनों की खोज करें"
+  },
+  "greeting": {
+    "morning": "सुप्रभात",
+    "afternoon": "नमस्कार",
+    "evening": "शुभ संध्या",
+    "night": "शुभ रात्रि"
+  },
+  "home": {
+    "whatDoYouWant": "आज आप क्या खाना चाहेंगे?",
+    "topCategories": "टॉप श्रेणियाँ",
+    "popularRecipes": "लोकप्रिय व्यंजन",
+    "seeAll": "सभी देखें"
+  },
+  "nav": {
+    "home": "होम",
+    "categories": "श्रेणियाँ",
+    "favorites": "पसंदीदा",
+    "profile": "प्रोफ़ाइल",
+    "settings": "सेटिंग्स",
+    "search": "खोजें"
+  },
+  "search": {
+    "placeholder": "रेसिपी खोजें...",
+    "recentSearches": "हाल की खोजें",
+    "popular": "लोकप्रिय खोजें"
+  },
+  "actions": {
+    "save": "सहेजें",
+    "share": "साझा करें",
+    "print": "प्रिंट करें",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "addToCart": "शॉपिंग लिस्ट में जोड़ें",
+    "startCooking": "खाना बनाना शुरू करें",
+    "watchVideo": "वीडियो देखें",
+    "seeAll": "सभी देखें",
+    "tryAgain": "पुनः प्रयास करें"
+  },
+  "filters": {
+    "all": "सभी",
+    "veg": "शाकाहारी",
+    "nonVeg": "मांसाहारी",
+    "vegan": "वीगन",
+    "glutenFree": "ग्लूटेन मुक्त",
+    "quick": "जल्दी (< 30 मिनट)",
+    "easy": "आसान",
+    "popular": "लोकप्रिय"
+  },
+  "messages": {
+    "noResults": "कोई रेसिपी नहीं मिली",
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हो गया",
+    "savedSuccess": "रेसिपी सहेजी गई!",
+    "removedSuccess": "रेसिपी हटाई गई!",
+    "networkError": "कृपया अपना इंटरनेट कनेक्शन जांचें"
+  },
+  "units": {
+    "min": "मिनट",
+    "mins": "मिनट",
+    "hour": "घंटा",
+    "hours": "घंटे",
+    "cups": "कप",
+    "cup": "कप",
+    "tbsp": "बड़ा चम्मच",
+    "tsp": "छोटा चम्मच",
+    "pieces": "टुकड़े",
+    "grams": "ग्राम",
+    "kg": "किलो",
+    "ml": "मिली",
+    "liters": "लीटर",
+    "servings": "व्यक्ति"
+  },
+  "difficulty": {
+    "easy": "आसान",
+    "medium": "मध्यम",
+    "hard": "कठिन"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "language": "भाषा",
+    "selectLanguage": "भाषा चुनें",
+    "currentLanguage": "वर्तमान भाषा",
+    "theme": "थीम",
+    "darkMode": "डार्क मोड",
+    "notifications": "सूचनाएं",
+    "about": "हमारे बारे में",
+    "privacy": "गोपनीयता नीति",
+    "terms": "सेवा की शर्तें"
+  }
+}

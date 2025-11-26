@@ -1,0 +1,94 @@
+{
+  "app": {
+    "name": "Recipe Book",
+    "tagline": "Discover Delicious Recipes"
+  },
+  "greeting": {
+    "morning": "Good Morning",
+    "afternoon": "Good Afternoon",
+    "evening": "Good Evening",
+    "night": "Good Night"
+  },
+  "home": {
+    "whatDoYouWant": "What do you want today?",
+    "topCategories": "Top Categories",
+    "popularRecipes": "Popular Recipes",
+    "seeAll": "See All"
+  },
+  "nav": {
+    "home": "Home",
+    "categories": "Categories",
+    "favorites": "Favorites",
+    "profile": "Profile",
+    "settings": "Settings",
+    "search": "Search"
+  },
+  "search": {
+    "placeholder": "Search recipes...",
+    "recentSearches": "Recent Searches",
+    "popular": "Popular Searches"
+  },
+  "actions": {
+    "save": "Save",
+    "share": "Share",
+    "print": "Print",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "addToCart": "Add to Shopping List",
+    "startCooking": "Start Cooking",
+    "watchVideo": "Watch Video",
+    "seeAll": "See All",
+    "tryAgain": "Try Again"
+  },
+  "filters": {
+    "all": "All",
+    "veg": "Vegetarian",
+    "nonVeg": "Non-Vegetarian",
+    "vegan": "Vegan",
+    "glutenFree": "Gluten Free",
+    "quick": "Quick (< 30 min)",
+    "easy": "Easy",
+    "popular": "Popular"
+  },
+  "messages": {
+    "noResults": "No recipes found",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "savedSuccess": "Recipe saved!",
+    "removedSuccess": "Recipe removed!",
+    "networkError": "Please check your internet connection"
+  },
+  "units": {
+    "min": "min",
+    "mins": "mins",
+    "hour": "hour",
+    "hours": "hours",
+    "cups": "cups",
+    "cup": "cup",
+    "tbsp": "tbsp",
+    "tsp": "tsp",
+    "pieces": "pieces",
+    "grams": "g",
+    "kg": "kg",
+    "ml": "ml",
+    "liters": "L",
+    "servings": "servings"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "selectLanguage": "Select Language",
+    "currentLanguage": "Current Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "notifications": "Notifications",
+    "about": "About",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "title": "श्रेणियाँ",
+  "explore": "श्रेणियाँ देखें",
+  "items": {
+    "all": { "name": "सभी" },
+    "breakfast": { "name": "नाश्ता" },
+    "lunch": { "name": "दोपहर का खाना" },
+    "dinner": { "name": "रात का खाना" },
+    "snack": { "name": "स्नैक्स" },
+    "snacks": { "name": "स्नैक्स" },
+    "desserts": { "name": "मिठाई" },
+    "sweet": { "name": "मिठाई" },
+    "sweets": { "name": "मिठाई" },
+    "beverages": { "name": "पेय पदार्थ" },
+
+    "biriyani": { "name": "बिरयानी" },
+    "curries": { "name": "करी" },
+    "bread": { "name": "रोटी" },
+    "south_indian": { "name": "दक्षिण भारतीय" },
+    "north_indian": { "name": "उत्तर भारतीय" },
+    "street_food": { "name": "स्ट्रीट फूड" },
+    "non_veg": { "name": "मांसाहारी" },
+    "veg": { "name": "शाकाहारी" },
+
+    "healthy": { "name": "हेल्दी" },
+    "pizza": { "name": "पिज़्ज़ा" },
+    "burger": { "name": "बर्गर" },
+    "rolls": { "name": "रोल्स" },
+    "chinese": { "name": "चाइनीज़" },
+    "sandwitch": { "name": "सैंडविच" },
+    "cakes": { "name": "केक" },
+    "momos": { "name": "मोमोज़" }
+  }
+}

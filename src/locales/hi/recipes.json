@@ -1,0 +1,69 @@
+{
+  "recipe": {
+    "ingredients": "सामग्री",
+    "steps": "विधि",
+    "nutrition": "पोषण",
+    "reviews": "समीक्षाएं",
+    "prepTime": "तैयारी का समय",
+    "cookTime": "पकाने का समय",
+    "servings": "परोसने की मात्रा",
+    "difficulty": "कठिनाई",
+    "calories": "कैलोरी",
+    "similar": "समान व्यंजन"
+  },
+  "items": {
+    "breakfast": {
+      "name": "नाश्ता",
+      "description": "दिन की शुरुआत ऊर्जा के साथ"
+    },
+    "lunch": { "name": "दोपहर का खाना", "description": "दोपहर का भोजन" },
+    "pakora": { "name": "पकोड़ा", "description": "बेसन से बना तला हुआ स्नैक" },
+    "chaat": { "name": "चाट", "description": "चटपटा स्ट्रीट फूड" },
+    "vadapav": {
+      "name": "वड़ा पाव",
+      "description": "मुंबई का पसंदीदा स्ट्रीट फूड"
+    },
+    "idli": { "name": "इडली", "description": "नरम भाप में पकी चावल की केक" },
+    "paratha": { "name": "पराठा", "description": "भारतीय फ्लैटब्रेड" },
+    "aloogobhi": {
+      "name": "आलू गोभी",
+      "description": "आलू और फूलगोभी की सब्जी"
+    },
+    "butterchiken": {
+      "name": "बटर चिकन",
+      "description": "मलाईदार टमाटर वाली चिकन करी"
+    },
+    "daltadka": { "name": "दाल तड़का", "description": "तड़के वाली पीली दाल" },
+    "masaladosa": {
+      "name": "मसाला डोसा",
+      "description": "आलू भरा कुरकुरा डोसा"
+    },
+    "sambhar": { "name": "सांभर", "description": "दक्षिण भारतीय दाल सब्जी" },
+    "dalmakhni": { "name": "दाल मखनी", "description": "मलाईदार काली दाल" },
+    "chanamasala": { "name": "चना मसाला", "description": "मसालेदार छोले" },
+    "shaipaneer": { "name": "शाही पनीर", "description": "शाही पनीर करी" },
+    "roganjosh": { "name": "रोगन जोश", "description": "कश्मीरी मटन करी" },
+    "tandurichiken": {
+      "name": "तंदूरी चिकन",
+      "description": "मसालेदार भुना चिकन"
+    },
+    "vinadaloo": { "name": "विंदालू", "description": "तीखी गोवन करी" },
+    "malabarfishcurry": {
+      "name": "मालाबार फिश करी",
+      "description": "केरल स्टाइल मछली करी"
+    },
+    "biriyani": { "name": "बिरयानी", "description": "सुगंधित लेयर्ड चावल" },
+    "samosa": { "name": "समोसा", "description": "कुरकुरा तला हुआ स्नैक" },
+    "rasmalai": { "name": "रसमलाई", "description": "मीठे दूध में नरम छेना" },
+    "kulfi": { "name": "कुल्फी", "description": "पारंपरिक भारतीय आइसक्रीम" },
+    "gulabjamun": {
+      "name": "गुलाब जामुन",
+      "description": "चाशनी में मीठे गोले"
+    },
+    "barfi": { "name": "बर्फी", "description": "भारतीय दूध की मिठाई" },
+    "lassi": { "name": "लस्सी", "description": "ताज़ा दही का पेय" },
+    "pastas": { "name": "पास्ता", "description": "इटालियन पास्ता व्यंजन" },
+    "fruitjuices": { "name": "फ्रूट जूस", "description": "ताज़ा फलों का रस" },
+    "naan": { "name": "नान", "description": "नरम भारतीय ब्रेड" }
+  }
+}
