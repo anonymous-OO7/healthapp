@@ -6,8 +6,8 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import AccountSetup from '../screens/AccountSetup/AccountSetup.js';
 import DashBoard from '../screens/Dashboard/Dashboard.js';
 import SearchPage from '../screens/SearchPage/SearchPage.js';
-import DetailsPage from '../screens/DetailsPage/DetailsPage.js';
 import LandingScreen from '../screens/Landing/Landing.js';
+import CartScreen from '../../src/screens/CartScreen/CartScreen.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +21,7 @@ const AppStack = () => {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="SearchPage" component={SearchPage} />
       <Stack.Screen name="AccountSetup" component={AccountSetup} />
-      <Stack.Screen name="DetailsPage" component={DetailsPage} />
+      <Stack.Screen name="CartScreen" component={CartScreen} />
     </Stack.Navigator>
   );
 };

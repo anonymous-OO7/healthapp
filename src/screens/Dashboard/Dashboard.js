@@ -10,6 +10,9 @@ import Comingsoon from '../../components/molecules/Comingsoon';
 import HomeIcon from '../../assets/images/tabbar/newlogos/HomeIcon';
 import StoreIcon from '../../assets/images/tabbar/newlogos/StoreIcon';
 import JobsIcon from '../../assets/images/tabbar/newlogos/JobsIcon';
+import CartScreen from '../CartScreen/CartScreen';
+
+import CartIcon from '../../assets/images/tabbar/newlogos/CartIcon';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -51,10 +54,10 @@ const DashBoard = props => {
       />
 
       <Tab.Screen
-        name="StoreScreen"
-        children={() => <Comingsoon {...props} />}
+        name="CartScreen"
+        children={() => <CartScreen {...props} />}
         options={{
-          tabBarIcon: ({ focused }) => renderIcon(StoreIcon, focused),
+          tabBarIcon: ({ focused }) => renderIcon(CartIcon, focused),
         }}
       />
 

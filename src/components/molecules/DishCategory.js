@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -17,12 +17,12 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import InputBox from '../common/InputBox';
-import {windowWidth} from '../../utils/Dimensions';
-import {Colors} from '../../assets/colors';
+import { windowWidth } from '../../utils/Dimensions';
+import { Colors } from '../../assets/colors';
 import VegNon from '../common/VegNon';
 import LogoViewer from '../common/LogoViewer';
-import {StarRating, ProteinSvg} from '../../assets/svgs/SvgImages';
-const DishCategory = ({props, info, showIntersteialAdd}) => {
+import { StarRating, ProteinSvg } from '../../assets/svgs/SvgImages';
+const DishCategory = ({ props, info, showIntersteialAdd }) => {
   const {
     name,
     categories,
@@ -319,12 +319,8 @@ const DishCategory = ({props, info, showIntersteialAdd}) => {
           //   info: info,
           //   list: recipies[name],
           // });
-
-          props.navigation.navigate('DetailsPage', {
-            info: info,
-            list: recipies[name],
-          });
-        }}>
+        }}
+      >
         <View style={DishCategorystyles.container}>
           <View style={DishCategorystyles.cardContainer}>
             <View style={DishCategorystyles.profileButton}>
@@ -334,7 +330,7 @@ const DishCategory = ({props, info, showIntersteialAdd}) => {
                   height: responsiveWidth(25),
                 }}
                 resizeMode="contain"
-                source={{uri: image}}
+                source={{ uri: image }}
               />
             </View>
 
@@ -354,7 +350,8 @@ const DishCategory = ({props, info, showIntersteialAdd}) => {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
+            }}
+          >
             <LogoViewer
               Logosource={StarRating}
               containerstyle={DishCategorystyles.loginImgContainer}
@@ -482,7 +479,7 @@ const DishCategorystyles = StyleSheet.create({
 
   image: {
     flex: 1,
-    transform: [{scale: 1.5}],
+    transform: [{ scale: 1.5 }],
   },
 
   infoMainctn: {
@@ -496,7 +493,7 @@ const DishCategorystyles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 3, // for Android
