@@ -1,4 +1,8 @@
 {
   "name": "recipieapp",
-  "displayName": "recipieapp"
+  "displayName": "Eatfit",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-2888315269414105~4153147206",
+    "ios_app_id": "ca-app-pub-2888315269414105~4153147206"
+  }
 }

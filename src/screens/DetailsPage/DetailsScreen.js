@@ -15,6 +15,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/core';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useTranslation } from 'react-i18next';
+import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 // Context
 import { useCart } from '../../context/CartContext';
@@ -25,6 +26,7 @@ import { Colors } from '../../assets/colors';
 import LogoViewer from '../../components/common/LogoViewer';
 import { BackSvg, StarRating } from '../../assets/images/SvgImages';
 import Toast from '../../components/Toast';
+import { BannerAdComponent } from '../../components/molecules/ads';
 
 const DetailsScreen = () => {
   const navigation = useNavigation();
@@ -345,14 +347,13 @@ const DetailsScreen = () => {
     );
   };
 
-  // 4. Recipe Tab (Ingredients + Steps)
   const renderRecipeTab = () => {
     const inCartCount =
       food?.ingredients?.filter(ing => isInCart(ing)).length || 0;
 
     return (
       <View style={DetailsScreenStyle.sectionContainer}>
-        {/* Ingredients Section */}
+        {/* Ingredients Section Header */}
         <View style={DetailsScreenStyle.sectionHeaderRow}>
           <Text style={DetailsScreenStyle.sectionHeader}>
             🥗 {t('recipe.ingredients')}
@@ -362,7 +363,7 @@ const DetailsScreen = () => {
           </Text>
         </View>
 
-        {/* Ingredients List - Single Row Design */}
+        {/* Ingredients List - Grid Layout */}
         <View style={DetailsScreenStyle.ingredientsList}>
           {food?.ingredients?.map((ingredient, index) => {
             const inCart = isInCart(ingredient);
@@ -377,18 +378,18 @@ const DetailsScreen = () => {
                 onPress={() => handleIngredientPress(ingredient)}
                 activeOpacity={0.7}
               >
-                {/* Ingredient Name */}
+                {/* Ingredient Name (Left Side) */}
                 <Text
                   style={[
                     DetailsScreenStyle.ingredientName,
                     inCart && DetailsScreenStyle.ingredientNameInCart,
                   ]}
-                  numberOfLines={1}
+                  numberOfLines={2} // Allow 2 lines so long names don't cut off immediately
                 >
                   {ingredient}
                 </Text>
 
-                {/* Add/Remove Icon */}
+                {/* Add/Remove Icon (Right Side - Smaller) */}
                 <View
                   style={[
                     DetailsScreenStyle.ingredientAction,
@@ -402,6 +403,9 @@ const DetailsScreen = () => {
               </TouchableOpacity>
             );
           })}
+          {/* Ghost items to keep grid alignment correct for last row */}
+          <View style={DetailsScreenStyle.ghostItem} />
+          <View style={DetailsScreenStyle.ghostItem} />
         </View>
 
         {/* Add All Button */}
@@ -522,6 +526,12 @@ const DetailsScreen = () => {
 
       {/* Nav Bar */}
       {renderNavBar()}
+      <View style={DetailsScreenStyle.bottomBannerContainer}>
+        <BannerAdComponent
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          containerStyle={DetailsScreenStyle.bottomBanner}
+        />
+      </View>
 
       {/* Video Section */}
       {renderVideoSection()}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -10,11 +10,13 @@ import {
   TouchableHighlight,
   StatusBar,
   Modal,
+  Platform,
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/core';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { useTranslation } from 'react-i18next';
+import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 import HomeScreenStyle from './HomeScreenStyle';
 import { Colors } from '../../assets/colors';
@@ -26,8 +28,14 @@ import LogoViewer from '../../components/common/LogoViewer';
 import SearchClick from '../../components/molecules/SearchClick';
 import VegNon from '../../components/common/VegNon';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
+import {
+  BannerAdComponent,
+  AdLoadingOverlay,
+} from '../../components/molecules/ads';
+import { useInterstitialAd } from '../../../src/common/hooks/useInterstitialAd';
 
-import { Help, ProteinSvg, StarRating } from '../../assets/images/SvgImages';
+import { Help, StarRating } from '../../assets/images/SvgImages';
+import { SCREEN_WIDTH } from '../DetailsPage/DetailsScreenStyle';
 
 /**
  * Food Card Component
@@ -165,19 +173,28 @@ const DietPickerModal = ({
   );
 };
 
+/**
+ * HomeScreen Component
+ */
 const HomeScreen = props => {
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
+
+  // Ad Hook
+  const { isLoading: isAdLoading, showAdThenNavigate } = useInterstitialAd();
 
   const [currentList, setCurrentList] = useState(dataArray);
 
   // --- Filter States ---
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState('all');
-  const [dietFilter, setDietFilter] = useState('all'); // 'all', 'veg', 'non-veg'
+  const [dietFilter, setDietFilter] = useState('all');
 
   // --- Modals ---
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showDietModal, setShowDietModal] = useState(false);
+
+  // --- Pending Navigation (for after ad) ---
+  const [pendingNavigation, setPendingNavigation] = useState(null);
 
   // --- Translations ---
   const getLocalizedGreeting = () => {
@@ -203,12 +220,10 @@ const HomeScreen = props => {
   const applyFilters = useCallback((category, diet) => {
     let result = dataArray;
 
-    // 1. Filter by Category
     if (category !== 'all') {
       result = result.filter(item => item.category === category);
     }
 
-    // 2. Filter by Diet
     if (diet !== 'all') {
       const isVegRequired = diet === 'veg';
       result = result.filter(item => item.veg === isVegRequired);
@@ -227,12 +242,27 @@ const HomeScreen = props => {
     applyFilters(selectedCategoryIndex, diet);
   };
 
-  const gotoDetail = food => {
-    navigation.navigate('DetailsScreen', {
-      food: food,
-      list: recipies[food.name] || [],
-    });
-  };
+  /**
+   * Navigate to detail screen with interstitial ad
+   * Following Google AdMob best practices:
+   * - Ad is shown at natural pause (user clicks to view recipe)
+   * - Frequency capped to prevent ad fatigue
+   * - Non-blocking if ad fails to load
+   */
+  const gotoDetail = useCallback(
+    food => {
+      const navigationData = {
+        food: food,
+        list: recipies[food.name] || [],
+      };
+
+      // Show ad then navigate
+      showAdThenNavigate(() => {
+        navigation.navigate('DetailsScreen', navigationData);
+      });
+    },
+    [navigation, showAdThenNavigate],
+  );
 
   const resetFilters = () => {
     setSelectedCategoryIndex('all');
@@ -240,7 +270,6 @@ const HomeScreen = props => {
     setCurrentList(dataArray);
   };
 
-  // Helper to get Diet Icon/Color for the header button
   const getDietIconInfo = () => {
     switch (dietFilter) {
       case 'veg':
@@ -254,11 +283,41 @@ const HomeScreen = props => {
 
   const dietInfo = getDietIconInfo();
 
+  /**
+   * Render item with inline ad every N items (optional)
+   */
+  const renderItemWithAd = ({ item, index }) => {
+    // Show inline native ad every 6 items (optional feature)
+    const showInlineAd = false; // Set to true to enable inline ads
+
+    if (showInlineAd && index > 0 && index % 6 === 0) {
+      return (
+        <>
+          <View style={HomeScreenStyle.inlineAdContainer}>
+            <BannerAdComponent
+              size={BannerAdSize.MEDIUM_RECTANGLE}
+              containerStyle={HomeScreenStyle.inlineAdBanner}
+            />
+          </View>
+          <FoodCard food={item} onPress={gotoDetail} t={t} />
+        </>
+      );
+    }
+
+    return <FoodCard food={item} onPress={gotoDetail} t={t} />;
+  };
+
   return (
     <SafeAreaView style={HomeScreenStyle.safeArea}>
       <StatusBar
         barStyle="dark-content"
         backgroundColor={Colors.slatebackground || '#FAFAFA'}
+      />
+
+      {/* Ad Loading Overlay */}
+      <AdLoadingOverlay
+        visible={isAdLoading}
+        message={t('ads.loading') || 'Loading...'}
       />
 
       {/* --- FIXED HEADER SECTION --- */}
@@ -313,16 +372,6 @@ const HomeScreen = props => {
             <View style={HomeScreenStyle.searchBoxWrapper}>
               <SearchClick placeholder={t('search.placeholder')} />
             </View>
-            <TouchableOpacity
-              style={HomeScreenStyle.filterBtn}
-              activeOpacity={0.8}
-            >
-              <LogoViewer
-                Logosource={Help}
-                containerstyle={{ width: 20, height: 20 }}
-                logostyle={{ width: 20, height: 20, tintColor: '#FFF' }}
-              />
-            </TouchableOpacity>
           </View>
         </View>
 
@@ -354,12 +403,6 @@ const HomeScreen = props => {
                     isSelected && HomeScreenStyle.categoryPillSelected,
                   ]}
                 >
-                  <View style={HomeScreenStyle.categoryIconBox}>
-                    <Image
-                      source={category.image}
-                      style={HomeScreenStyle.categoryIcon}
-                    />
-                  </View>
                   <Text
                     style={[
                       HomeScreenStyle.categoryText,
@@ -377,23 +420,26 @@ const HomeScreen = props => {
 
       {/* --- SCROLLABLE RECIPE LIST --- */}
       <View style={HomeScreenStyle.recipeListContainer}>
-        <View style={HomeScreenStyle.listTitleRow}>
+        {/* <View style={HomeScreenStyle.listTitleRow}>
           <Text style={HomeScreenStyle.sectionTitle}>
             {t('home.popularRecipes')}
           </Text>
           <TouchableOpacity>
             <Text style={HomeScreenStyle.seeAllText}>{t('home.seeAll')}</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <FlatList
           data={currentList}
           keyExtractor={(item, index) => `recipe-${item.id || index}`}
           numColumns={2}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={HomeScreenStyle.flatListContent}
+          contentContainerStyle={[
+            HomeScreenStyle.flatListContent,
+            { paddingBottom: 80 }, // Extra padding for banner ad
+          ]}
           columnWrapperStyle={HomeScreenStyle.columnWrapper}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <FoodCard food={item} onPress={gotoDetail} t={t} />
           )}
           ListEmptyComponent={() => (
@@ -423,11 +469,18 @@ const HomeScreen = props => {
             </View>
           )}
         />
+        <View style={{ width: SCREEN_WIDTH, height: 60 }} />
       </View>
 
-      {/* --- MODALS --- */}
+      {/* --- BOTTOM BANNER AD --- */}
+      <View style={HomeScreenStyle.bottomBannerContainer}>
+        <BannerAdComponent
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          containerStyle={HomeScreenStyle.bottomBanner}
+        />
+      </View>
 
-      {/* 1. Language Modal */}
+      {/* Language Modal */}
       <Modal
         visible={showLanguageModal}
         transparent={true}
@@ -441,7 +494,7 @@ const HomeScreen = props => {
         </View>
       </Modal>
 
-      {/* 2. Diet Selection Modal */}
+      {/* Diet Selection Modal */}
       <DietPickerModal
         isVisible={showDietModal}
         onClose={() => setShowDietModal(false)}

@@ -7,6 +7,7 @@ import {
 import { Colors } from '../../assets/colors';
 
 const { width } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
 
 const Theme = {
   background: '#FAFAFA',
@@ -21,7 +22,6 @@ const Theme = {
 };
 
 const HomeScreenStyle = StyleSheet.create({
-  // --- Main Container ---
   safeArea: {
     flex: 1,
     backgroundColor: Theme.background,
@@ -32,7 +32,6 @@ const HomeScreenStyle = StyleSheet.create({
     backgroundColor: Theme.background,
   },
 
-  // --- Fixed Header Section ---
   fixedHeaderContainer: {
     backgroundColor: Theme.background,
     zIndex: 10,
@@ -46,7 +45,6 @@ const HomeScreenStyle = StyleSheet.create({
     paddingTop: 10,
   },
 
-  // --- Top Bar (Greeting + Controls) ---
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -70,7 +68,6 @@ const HomeScreenStyle = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // --- Header Buttons (Lang & Diet) ---
   headerIconBtn: {
     backgroundColor: Theme.white,
     width: 38,
@@ -99,7 +96,6 @@ const HomeScreenStyle = StyleSheet.create({
     fontSize: 16,
   },
 
-  // --- Search Bar ---
   searchSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -125,7 +121,6 @@ const HomeScreenStyle = StyleSheet.create({
     elevation: 5,
   },
 
-  // --- Categories Horizontal Scroll ---
   categorySection: {
     marginBottom: 5,
   },
@@ -192,7 +187,6 @@ const HomeScreenStyle = StyleSheet.create({
     color: Theme.white,
   },
 
-  // --- Recipe List Section ---
   recipeListContainer: {
     flex: 1,
     backgroundColor: Theme.background,
@@ -214,7 +208,6 @@ const HomeScreenStyle = StyleSheet.create({
     marginBottom: 10,
   },
 
-  // --- Food Card ---
   cardContainer: {
     width: (width - responsiveWidth(8) - 15) / 2,
     marginBottom: 20,
@@ -367,6 +360,68 @@ const HomeScreenStyle = StyleSheet.create({
     fontSize: 16,
     color: Theme.textMain,
     fontWeight: '500',
+  },
+
+  bottomBannerContainer: {
+    position: 'absolute',
+    bottom: 70,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+    borderTopWidth: 1,
+    borderTopColor: '#EFEFEF',
+    // Shadow for iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    // Elevation for Android
+    elevation: 8,
+    // Safe area padding for devices with home indicator
+    paddingBottom: Platform.OS === 'ios' ? 20 : 4,
+  },
+
+  bottomBanner: {
+    backgroundColor: 'transparent',
+  },
+
+  /**
+   * Inline Ad Container (for ads within the list)
+   */
+  inlineAdContainer: {
+    width: SCREEN_WIDTH - 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 12,
+    marginHorizontal: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#F8F8F8',
+  },
+
+  inlineAdBanner: {
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+
+  adLabel: {
+    position: 'absolute',
+    top: 4,
+    left: 8,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    zIndex: 1,
+  },
+
+  adLabelText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '600',
   },
 });
 

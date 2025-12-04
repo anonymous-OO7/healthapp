@@ -248,43 +248,52 @@ const DetailsScreenStyle = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 12,
   },
-
-  // --- Ingredients List (Single Row Design) ---
+  // --- Ingredients List (3 Items Per Row, Horizontal Content) ---
   ingredientsList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     marginBottom: 10,
   },
   ingredientRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: '32%', // Fits 3 items nicely (32% * 3 = 96% + gaps)
+    flexDirection: 'row', // Keeps Text and Icon on SAME line
+    alignItems: 'center', // Vertically center them
     justifyContent: 'space-between',
     backgroundColor: '#F8F9FA',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 12,
-    marginBottom: 8,
-    borderWidth: 1.5,
+    paddingHorizontal: 8, // Tighter padding
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+    borderWidth: 1, // Thinner border for cleaner grid look
     borderColor: '#E8E8E8',
+    minHeight: 45, // Ensure consistent height
+  },
+  ghostItem: {
+    width: '32%',
+    height: 0,
   },
   ingredientRowInCart: {
     backgroundColor: '#E8F5E9',
     borderColor: Theme.success,
   },
   ingredientName: {
-    flex: 1,
-    fontSize: responsiveFontSize(1.8),
+    flex: 1, // Takes up all available space left of icon
+    fontSize: responsiveFontSize(1.35), // Smaller font to fit grid
     color: Theme.textMain,
     fontWeight: '500',
     fontFamily: 'Poppins-Medium',
-    marginRight: 12,
+    marginRight: 4, // Small gap between text and icon
   },
   ingredientNameInCart: {
     color: Theme.success,
     fontWeight: '600',
   },
+  // Small Icon Container
   ingredientAction: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 20, // Very compact
+    height: 20,
+    borderRadius: 10,
     backgroundColor: Theme.primary,
     alignItems: 'center',
     justifyContent: 'center',
@@ -292,12 +301,13 @@ const DetailsScreenStyle = StyleSheet.create({
   ingredientActionInCart: {
     backgroundColor: Theme.success,
   },
+  // Small Icon Text (+ or ✓)
   ingredientActionIcon: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: 'bold',
+    lineHeight: 14,
   },
-
   // Steps List
   stepRow: {
     flexDirection: 'row',
@@ -434,6 +444,30 @@ const DetailsScreenStyle = StyleSheet.create({
     color: '#999',
     marginTop: 30,
     fontSize: 16,
+  },
+
+  bottomBannerContainer: {
+    position: 'relative',
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+    borderTopWidth: 1,
+    borderTopColor: '#EFEFEF',
+    // Shadow for iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    // Elevation for Android
+    elevation: 8,
+    // Safe area padding for devices with home indicator
+    paddingBottom: Platform.OS === 'ios' ? 20 : 4,
+  },
+  bottomBanner: {
+    backgroundColor: 'transparent',
   },
 });
 
