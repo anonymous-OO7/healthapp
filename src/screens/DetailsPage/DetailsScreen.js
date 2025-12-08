@@ -526,12 +526,12 @@ const DetailsScreen = () => {
 
       {/* Nav Bar */}
       {renderNavBar()}
-      <View style={DetailsScreenStyle.bottomBannerContainer}>
+      {/* <View style={DetailsScreenStyle.bottomBannerContainer}>
         <BannerAdComponent
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
           containerStyle={DetailsScreenStyle.bottomBanner}
         />
-      </View>
+      </View> */}
 
       {/* Video Section */}
       {renderVideoSection()}

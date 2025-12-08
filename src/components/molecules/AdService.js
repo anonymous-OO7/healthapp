@@ -98,7 +98,7 @@ class AdServiceClass {
           console.error('[AdService] Interstitial ad error:', error);
           this.isInterstitialLoaded = false;
           // Retry loading after delay
-          setTimeout(() => this.loadInterstitialAd(), 30000);
+          // setTimeout(() => this.loadInterstitialAd(), 30000);
         },
       );
 
