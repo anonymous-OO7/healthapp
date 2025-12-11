@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   SafeAreaView,
   View,
@@ -14,15 +14,15 @@ import {
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/core';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { useTranslation } from 'react-i18next';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 import HomeScreenStyle from './HomeScreenStyle';
 import { Colors } from '../../assets/colors';
-import dataArray from '../../assets/data/data';
+import recipes from '../../assets/data/data';
 import categories from '../../assets/data/categories';
-import { recipies } from '../../assets/data';
+
+// import { recipies } from '../../assets/data'; // Removing this import
 
 import LogoViewer from '../../components/common/LogoViewer';
 import SearchClick from '../../components/molecules/SearchClick';
@@ -34,31 +34,34 @@ import {
 } from '../../components/molecules/ads';
 import { useInterstitialAd } from '../../../src/common/hooks/useInterstitialAd';
 
-import { Help, StarRating } from '../../assets/images/SvgImages';
+import { StarRating } from '../../assets/images/SvgImages';
 import { SCREEN_WIDTH } from '../DetailsPage/DetailsScreenStyle';
+import Chip from '../../components/ui/Chip';
 
-/**
- * Food Card Component
- */
-const FoodCard = ({ food, onPress, t }) => {
-  const getLocalizedRecipeName = () => {
-    const safeName = (food.name || '').toLowerCase().replace(/\s+/g, '');
-    const key = `recipes.items.${safeName}.name`;
-    const translated = t(key, { defaultValue: '' });
-    return translated && translated !== key
-      ? translated
-      : food.display || food.name;
-  };
+const FoodCard = ({ food, onPress, t, i18nLanguage }) => {
+  const localizedTitle =
+    food.content[i18nLanguage]?.title || food.content.en.title;
+  const deliveryTime = food.meta.totalTimeString || '30 min';
+  const rating = food.meta.rating;
+  const isVeg = food.meta.isVeg;
 
-  const getLocalizedCategory = () => {
-    const safeCategory = (food.category || '')
-      .toLowerCase()
-      .replace(/\s+/g, '');
-    const key = `categories.items.${safeCategory}.name`;
-    const translated = t(key, { defaultValue: '' });
-    return translated && translated !== key
+  const getLocalizedPrimaryCategoryName = () => {
+    const primaryCategorySlug = food.meta.categoryIds[0];
+    if (!primaryCategorySlug) return '';
+    const translationKey = `categories.items.${primaryCategorySlug}.name`;
+    const translated = t(translationKey, { defaultValue: '' });
+
+    const categoryObject = categories.find(
+      c => c.category === primaryCategorySlug,
+    );
+    const fallbackName = categoryObject
+      ? categoryObject.display
+      : primaryCategorySlug.charAt(0).toUpperCase() +
+        primaryCategorySlug.slice(1);
+
+    return translated && translated !== translationKey
       ? translated
-      : food.category.charAt(0).toUpperCase() + food.category.slice(1);
+      : fallbackName;
   };
 
   return (
@@ -71,7 +74,7 @@ const FoodCard = ({ food, onPress, t }) => {
       <View style={HomeScreenStyle.cardInner}>
         <View style={HomeScreenStyle.cardImageContainer}>
           <Image
-            source={{ uri: food.image }}
+            source={{ uri: food.meta.thumbnail || food.meta.images[0] }}
             style={HomeScreenStyle.cardImage}
             resizeMode="cover"
           />
@@ -81,23 +84,21 @@ const FoodCard = ({ food, onPress, t }) => {
               containerstyle={{ width: 10, height: 10 }}
               logostyle={{ width: 10, height: 10 }}
             />
-            <Text style={HomeScreenStyle.ratingBadgeText}>{food.rating}</Text>
+            <Text style={HomeScreenStyle.ratingBadgeText}>{rating}</Text>
           </View>
         </View>
         <View style={HomeScreenStyle.cardContent}>
           <Text style={HomeScreenStyle.cardTitle} numberOfLines={1}>
-            {getLocalizedRecipeName()}
+            {localizedTitle}
           </Text>
           <Text style={HomeScreenStyle.cardSubTitle} numberOfLines={1}>
-            {getLocalizedCategory()}
+            {getLocalizedPrimaryCategoryName()}
           </Text>
           <View style={HomeScreenStyle.cardFooter}>
             <View style={HomeScreenStyle.metaRow}>
-              <VegNon disabled={food.veg} size={14} />
+              <VegNon isVeg={isVeg} size={14} />
               <View style={HomeScreenStyle.verticalDivider} />
-              <Text style={HomeScreenStyle.timeText}>
-                {food.deliveryTime || '30 min'}
-              </Text>
+              <Text style={HomeScreenStyle.timeText}>{deliveryTime}</Text>
             </View>
           </View>
         </View>
@@ -106,9 +107,6 @@ const FoodCard = ({ food, onPress, t }) => {
   );
 };
 
-/**
- * Diet Filter Picker Modal
- */
 const DietPickerModal = ({
   isVisible,
   onClose,
@@ -135,7 +133,9 @@ const DietPickerModal = ({
         onPress={onClose}
       >
         <View style={HomeScreenStyle.modalContentCenter}>
-          <Text style={HomeScreenStyle.modalTitle}>Select Diet Type</Text>
+          <Text style={HomeScreenStyle.modalTitle}>
+            {t('filters.selectDiet')}
+          </Text>
           {options.map(opt => (
             <TouchableOpacity
               key={opt.key}
@@ -173,30 +173,19 @@ const DietPickerModal = ({
   );
 };
 
-/**
- * HomeScreen Component
- */
 const HomeScreen = props => {
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
 
-  // Ad Hook
   const { isLoading: isAdLoading, showAdThenNavigate } = useInterstitialAd();
 
-  const [currentList, setCurrentList] = useState(dataArray);
-
-  // --- Filter States ---
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState('all');
+  const [selectedCategorySlug, setSelectedCategorySlug] = useState('all');
   const [dietFilter, setDietFilter] = useState('all');
 
-  // --- Modals ---
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showDietModal, setShowDietModal] = useState(false);
 
-  // --- Pending Navigation (for after ad) ---
-  const [pendingNavigation, setPendingNavigation] = useState(null);
-
-  // --- Translations ---
   const getLocalizedGreeting = () => {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 12) return t('greeting.morning');
@@ -209,54 +198,45 @@ const HomeScreen = props => {
     const safeCategory = (categoryKey || '').toLowerCase().replace(/\s+/g, '');
     const translationKey = `categories.items.${safeCategory}.name`;
     const translated = t(translationKey, { defaultValue: '' });
+
+    if (categoryKey === 'all') return t('filters.all');
+
     return translated && translated !== translationKey
       ? translated
-      : categoryKey === 'all'
-      ? 'All'
       : categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
   };
 
-  // --- Filtering Logic ---
-  const applyFilters = useCallback((category, diet) => {
-    let result = dataArray;
+  const currentList = useMemo(() => {
+    let result = recipes;
 
-    if (category !== 'all') {
-      result = result.filter(item => item.category === category);
+    if (selectedCategorySlug !== 'all') {
+      result = result.filter(item =>
+        item.meta.categoryIds.includes(selectedCategorySlug),
+      );
     }
 
-    if (diet !== 'all') {
-      const isVegRequired = diet === 'veg';
-      result = result.filter(item => item.veg === isVegRequired);
+    if (dietFilter !== 'all') {
+      const isVegRequired = dietFilter === 'veg';
+      result = result.filter(item => item.meta.isVeg === isVegRequired);
     }
 
-    setCurrentList(result);
-  }, []);
+    return result;
+  }, [recipes, selectedCategorySlug, dietFilter]);
 
-  const handleCategoryPress = category => {
-    setSelectedCategoryIndex(category);
-    applyFilters(category, dietFilter);
+  const handleCategoryPress = categorySlug => {
+    setSelectedCategorySlug(categorySlug);
   };
 
   const handleDietSelect = diet => {
     setDietFilter(diet);
-    applyFilters(selectedCategoryIndex, diet);
   };
 
-  /**
-   * Navigate to detail screen with interstitial ad
-   * Following Google AdMob best practices:
-   * - Ad is shown at natural pause (user clicks to view recipe)
-   * - Frequency capped to prevent ad fatigue
-   * - Non-blocking if ad fails to load
-   */
   const gotoDetail = useCallback(
     food => {
       const navigationData = {
         food: food,
-        list: recipies[food.name] || [],
       };
 
-      // Show ad then navigate
       showAdThenNavigate(() => {
         navigation.navigate('DetailsScreen', navigationData);
       });
@@ -265,9 +245,8 @@ const HomeScreen = props => {
   );
 
   const resetFilters = () => {
-    setSelectedCategoryIndex('all');
+    setSelectedCategorySlug('all');
     setDietFilter('all');
-    setCurrentList(dataArray);
   };
 
   const getDietIconInfo = () => {
@@ -283,47 +262,20 @@ const HomeScreen = props => {
 
   const dietInfo = getDietIconInfo();
 
-  /**
-   * Render item with inline ad every N items (optional)
-   */
-  const renderItemWithAd = ({ item, index }) => {
-    // Show inline native ad every 6 items (optional feature)
-    const showInlineAd = false; // Set to true to enable inline ads
-
-    if (showInlineAd && index > 0 && index % 6 === 0) {
-      return (
-        <>
-          <View style={HomeScreenStyle.inlineAdContainer}>
-            <BannerAdComponent
-              size={BannerAdSize.MEDIUM_RECTANGLE}
-              containerStyle={HomeScreenStyle.inlineAdBanner}
-            />
-          </View>
-          <FoodCard food={item} onPress={gotoDetail} t={t} />
-        </>
-      );
-    }
-
-    return <FoodCard food={item} onPress={gotoDetail} t={t} />;
-  };
-
   return (
     <SafeAreaView style={HomeScreenStyle.safeArea}>
       <StatusBar
-        barStyle="dark-content"
+        barStyle={Platform.OS === 'android' ? 'dark-content' : 'light-content'}
         backgroundColor={Colors.slatebackground || '#FAFAFA'}
       />
 
-      {/* Ad Loading Overlay */}
       <AdLoadingOverlay
         visible={isAdLoading}
         message={t('ads.loading') || 'Loading...'}
       />
 
-      {/* --- FIXED HEADER SECTION --- */}
       <View style={HomeScreenStyle.fixedHeaderContainer}>
         <View style={HomeScreenStyle.headerWrapper}>
-          {/* Top Bar: Greeting + Controls */}
           <View style={HomeScreenStyle.topBar}>
             <View style={{ flex: 1 }}>
               <Text style={HomeScreenStyle.greetingText}>
@@ -335,7 +287,6 @@ const HomeScreen = props => {
             </View>
 
             <View style={HomeScreenStyle.topBarRight}>
-              {/* Diet Selector Dropdown Button */}
               <TouchableOpacity
                 style={[
                   HomeScreenStyle.headerIconBtn,
@@ -347,14 +298,13 @@ const HomeScreen = props => {
                 <Text style={{ fontSize: 18 }}>{dietInfo.text}</Text>
               </TouchableOpacity>
 
-              {/* Language Selector Button */}
               <TouchableOpacity
                 style={HomeScreenStyle.headerIconBtn}
                 onPress={() => setShowLanguageModal(true)}
                 activeOpacity={0.7}
               >
                 <Text style={HomeScreenStyle.headerBtnText}>
-                  {i18n.language === 'en' ? '🇺🇸' : '🇮🇳'}
+                  {currentLanguage === 'en' ? '🇺🇸' : '🇮🇳'}
                 </Text>
               </TouchableOpacity>
 
@@ -367,7 +317,6 @@ const HomeScreen = props => {
             </View>
           </View>
 
-          {/* Search & Filter Icon */}
           <View style={HomeScreenStyle.searchSection}>
             <View style={HomeScreenStyle.searchBoxWrapper}>
               <SearchClick placeholder={t('search.placeholder')} />
@@ -375,13 +324,12 @@ const HomeScreen = props => {
           </View>
         </View>
 
-        {/* Categories Horizontal List */}
         <View style={HomeScreenStyle.categorySection}>
           <View style={HomeScreenStyle.sectionHeader}>
             <Text style={HomeScreenStyle.sectionTitle}>
               {t('home.topCategories')}
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => console.log('See All Categories')}>
               <Text style={HomeScreenStyle.seeAllText}>{t('home.seeAll')}</Text>
             </TouchableOpacity>
           </View>
@@ -391,56 +339,40 @@ const HomeScreen = props => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={HomeScreenStyle.categoryListContainer}
           >
-            {categories.map((category, index) => {
-              const isSelected = selectedCategoryIndex === category.category;
+            {categories.map(category => {
+              const isSelected = selectedCategorySlug === category.category;
               return (
-                <TouchableOpacity
-                  key={index}
-                  activeOpacity={0.8}
+                <Chip
+                  key={category.category}
+                  label={getLocalizedCategoryName(category.category)}
+                  selected={isSelected}
                   onPress={() => handleCategoryPress(category.category)}
-                  style={[
-                    HomeScreenStyle.categoryPill,
-                    isSelected && HomeScreenStyle.categoryPillSelected,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      HomeScreenStyle.categoryText,
-                      isSelected && HomeScreenStyle.categoryTextSelected,
-                    ]}
-                  >
-                    {getLocalizedCategoryName(category.category)}
-                  </Text>
-                </TouchableOpacity>
+                  showBorder={true}
+                />
               );
             })}
           </ScrollView>
         </View>
       </View>
 
-      {/* --- SCROLLABLE RECIPE LIST --- */}
       <View style={HomeScreenStyle.recipeListContainer}>
-        {/* <View style={HomeScreenStyle.listTitleRow}>
-          <Text style={HomeScreenStyle.sectionTitle}>
-            {t('home.popularRecipes')}
-          </Text>
-          <TouchableOpacity>
-            <Text style={HomeScreenStyle.seeAllText}>{t('home.seeAll')}</Text>
-          </TouchableOpacity>
-        </View> */}
-
         <FlatList
           data={currentList}
-          keyExtractor={(item, index) => `recipe-${item.id || index}`}
+          keyExtractor={item => `recipe-${item.id}`}
           numColumns={2}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={[
             HomeScreenStyle.flatListContent,
-            { paddingBottom: 80 }, // Extra padding for banner ad
+            { paddingBottom: 80 },
           ]}
           columnWrapperStyle={HomeScreenStyle.columnWrapper}
-          renderItem={({ item, index }) => (
-            <FoodCard food={item} onPress={gotoDetail} t={t} />
+          renderItem={({ item }) => (
+            <FoodCard
+              food={item}
+              onPress={gotoDetail}
+              t={t}
+              i18nLanguage={currentLanguage}
+            />
           )}
           ListEmptyComponent={() => (
             <View style={HomeScreenStyle.emptyContainer}>
@@ -463,7 +395,7 @@ const HomeScreen = props => {
                 onPress={resetFilters}
               >
                 <Text style={HomeScreenStyle.resetButtonText}>
-                  {t('filters.all')}
+                  {t('filters.reset')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -472,7 +404,7 @@ const HomeScreen = props => {
         <View style={{ width: SCREEN_WIDTH, height: 60 }} />
       </View>
 
-      {/* --- BOTTOM BANNER AD --- */}
+      {/* Bottom Banner Ad */}
       <View style={HomeScreenStyle.bottomBannerContainer}>
         <BannerAdComponent
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -480,7 +412,7 @@ const HomeScreen = props => {
         />
       </View>
 
-      {/* Language Modal */}
+      {/* Modals */}
       <Modal
         visible={showLanguageModal}
         transparent={true}
@@ -493,8 +425,6 @@ const HomeScreen = props => {
           </View>
         </View>
       </Modal>
-
-      {/* Diet Selection Modal */}
       <DietPickerModal
         isVisible={showDietModal}
         onClose={() => setShowDietModal(false)}

@@ -11,6 +11,10 @@ import CategoryItems from '../screens/CategoryItems/CategoryItems.js';
 import LandingScreen from '../screens/Landing/Landing.js';
 import DetailsScreen from '../screens/DetailsPage/DetailsScreen.js';
 import CartScreen from '../../src/screens/CartScreen/CartScreen.js';
+import WorkoutHomeScreen from '../screens/WorkoutScreens/WorkoutHomeScreen.js';
+import WorkOutScreen from '../screens/WorkoutScreens/WorkOutScreen/WorkOutScreen.js';
+import FitScreen from '../screens/WorkoutScreens/FitScreen.js';
+import RestScreen from '../screens/WorkoutScreens/RestScreen.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +34,27 @@ const AuthStack = () => {
       <Stack.Screen name="CategoryItems" component={CategoryItems} />
       <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
       <Stack.Screen name="CartScreen" component={CartScreen} />
+
+      <Stack.Screen
+        name="WorkoutHome"
+        component={WorkoutHomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Workout"
+        component={WorkOutScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Fit"
+        component={FitScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Rest"
+        component={RestScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

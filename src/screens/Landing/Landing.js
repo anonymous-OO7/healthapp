@@ -12,36 +12,29 @@ import {
 import { useNavigation } from '@react-navigation/core';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../assets/colors';
-import {
-  responsiveFontSize,
-  responsiveHeight,
-  responsiveWidth,
-} from 'react-native-responsive-dimensions';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
-// Reusing your existing button component
 import { PrimaryButton } from '../../components/common/AppButton/Button';
-
 const { width, height } = Dimensions.get('window');
 
-// 1. Define the slides data
 const SLIDES = [
   {
     id: '1',
-    image: require('../../assets/images/onboardImage.png'), // You can use different images for each slide if you have them
+    image: require('../../assets/images/onboardImage.png'),
     title: 'Discover Recipes',
     subtitle:
       'Explore thousands of delicious recipes and find your next favorite meal.',
   },
   {
     id: '2',
-    image: require('../../assets/images/onboardImage.png'), // Replace with a video/play icon image if available
+    image: require('../../assets/images/onboardImage.png'),
     title: 'Watch & Cook',
     subtitle:
       'Follow along with step-by-step video tutorials for perfect results every time.',
   },
   {
     id: '3',
-    image: require('../../assets/images/onboardImage.png'), // Replace with a cart/shopping image if available
+    image: require('../../assets/images/onboardImage.png'),
     title: 'Smart Shopping',
     subtitle:
       'Add ingredients directly to your cart and never miss an item again.',
@@ -53,14 +46,12 @@ const LandingScreen = () => {
   const flatListRef = useRef(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-  // Handle Scroll to update indicator
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
     setCurrentSlideIndex(currentIndex);
   };
 
-  // Handle "Next" or "Get Started"
   const goNextSlide = () => {
     const nextSlideIndex = currentSlideIndex + 1;
     if (nextSlideIndex !== SLIDES.length) {
@@ -72,7 +63,6 @@ const LandingScreen = () => {
     }
   };
 
-  // Handle "Skip"
   const skip = () => {
     const lastSlideIndex = SLIDES.length - 1;
     const offset = lastSlideIndex * width;
@@ -80,7 +70,6 @@ const LandingScreen = () => {
     setCurrentSlideIndex(lastSlideIndex);
   };
 
-  // Render a single slide item
   const Slide = ({ item }) => {
     return (
       <View style={style.slideContainer}>

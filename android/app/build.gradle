@@ -82,8 +82,8 @@ android {
         applicationId "com.recipieapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
-        versionName "1.0.17"
+        versionCode 18
+        versionName "1.0.18"
     }
     signingConfigs {
         debug {
@@ -126,3 +126,4 @@ dependencies {
         implementation jscFlavor
     }
 }
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")

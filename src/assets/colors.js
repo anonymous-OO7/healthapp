@@ -1,6 +1,6 @@
 export const Colors = {
   primary: '#3498db',
-  secondary: '#2ecc71',
+  secondary: '#fedac5',
   background: '#f2f2f2',
   text: '#333333',
   // Add more colors as needed
@@ -19,8 +19,6 @@ export const Colors = {
   sliderUnselect: '#EEEFF3',
   notificationText: '#70737C',
   dark: '#000',
-  primary: '#F9813A',
-  secondary: '#fedac5',
   light: '#E5E5E5',
   grey: '#908e8c',
 };
