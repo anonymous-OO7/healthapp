@@ -36,6 +36,7 @@ const UNITS = [
   'tsp',
   'bunch',
   'packet',
+  'can',
 ];
 
 const CartScreen = () => {
@@ -105,6 +106,7 @@ const CartScreen = () => {
   const handleUnitChange = unit => {
     if (selectedItemForUnit) {
       updateUnit(selectedItemForUnit.id, unit);
+      showToast(`Unit changed to ${unit}`, 'info');
     }
     setUnitModalVisible(false);
     setSelectedItemForUnit(null);
@@ -169,9 +171,7 @@ const CartScreen = () => {
 
       <Text style={CartScreenStyle.headerTitle}>🛒 Shopping Cart</Text>
 
-      <View style={CartScreenStyle.headerRight}>
-        {/* Additional header buttons can go here */}
-      </View>
+      <View style={CartScreenStyle.headerRight} />
     </View>
   );
 
@@ -182,6 +182,7 @@ const CartScreen = () => {
         <Text style={CartScreenStyle.statNumber}>{stats.total}</Text>
         <Text style={CartScreenStyle.statLabel}>Total Items</Text>
       </View>
+      <View style={CartScreenStyle.statDivider} />
       <View style={CartScreenStyle.statItem}>
         <Text
           style={[
@@ -193,6 +194,7 @@ const CartScreen = () => {
         </Text>
         <Text style={CartScreenStyle.statLabel}>Shopped ✓</Text>
       </View>
+      <View style={CartScreenStyle.statDivider} />
       <View style={CartScreenStyle.statItem}>
         <Text
           style={[
@@ -211,10 +213,10 @@ const CartScreen = () => {
   const renderSortBar = () => (
     <View style={CartScreenStyle.sortBar}>
       {[
-        { key: 'addedAt', label: '🕒 Recent', icon: '' },
-        { key: 'name', label: '🔤 Name', icon: '' },
-        { key: 'recipe', label: '🍲 Recipe', icon: '' },
-        { key: 'checked', label: '✓ Status', icon: '' },
+        { key: 'addedAt', label: '🕒 Recent' },
+        { key: 'name', label: '🔤 Name' },
+        { key: 'recipe', label: '🍲 Recipe' },
+        { key: 'checked', label: '✓ Status' },
       ].map(option => (
         <TouchableOpacity
           key={option.key}
@@ -238,7 +240,6 @@ const CartScreen = () => {
     </View>
   );
 
-  // Render Add Custom Item Section
   const renderAddCustomSection = () => (
     <View style={CartScreenStyle.addCustomSection}>
       <Text style={CartScreenStyle.addCustomTitle}>➕ Add Custom Item</Text>
@@ -246,6 +247,7 @@ const CartScreen = () => {
         <TextInput
           style={CartScreenStyle.addCustomInput}
           placeholder="Item name..."
+          placeholderTextColor={Colors.textSecondary}
           value={customItemName}
           onChangeText={setCustomItemName}
           returnKeyType="done"
@@ -254,6 +256,7 @@ const CartScreen = () => {
         <TextInput
           style={CartScreenStyle.addCustomQuantityInput}
           placeholder="Qty"
+          placeholderTextColor={Colors.textSecondary}
           value={customQuantity}
           onChangeText={setCustomQuantity}
           keyboardType="numeric"
@@ -264,13 +267,14 @@ const CartScreen = () => {
           onPress={handleAddCustomItem}
           activeOpacity={0.8}
         >
-          <Text style={{ fontSize: 20, color: '#FFF' }}>+</Text>
+          <Text style={{ fontSize: 20, color: '#FFF', fontWeight: 'bold' }}>
+            +
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 
-  // Render Cart Item
   const renderCartItem = ({ item }) => (
     <View
       style={[
@@ -278,7 +282,6 @@ const CartScreen = () => {
         item.isChecked && CartScreenStyle.cartItemChecked,
       ]}
     >
-      {/* Check Button */}
       <TouchableOpacity
         style={[
           CartScreenStyle.checkButton,
@@ -288,17 +291,19 @@ const CartScreen = () => {
         activeOpacity={0.8}
       >
         {item.isChecked && (
-          <Text style={{ color: '#FFF', fontWeight: 'bold' }}>✓</Text>
+          <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 16 }}>
+            ✓
+          </Text>
         )}
       </TouchableOpacity>
 
-      {/* Item Content */}
       <View style={CartScreenStyle.itemContent}>
         <Text
           style={[
             CartScreenStyle.itemName,
             item.isChecked && CartScreenStyle.itemNameChecked,
           ]}
+          numberOfLines={1}
         >
           {item.name}
         </Text>
@@ -309,26 +314,24 @@ const CartScreen = () => {
               item.isCustom && CartScreenStyle.itemRecipeCustom,
             ]}
           >
-            {item.isCustom ? '✏️ Custom' : `🍲 ${item.recipeName}`}
+            {item.isCustom ? '✏️ Custom' : `🍲 ${item.recipeName || 'Recipe'}`}
           </Text>
 
-          {/* Unit Selector */}
           <TouchableOpacity onPress={() => openUnitPicker(item)}>
-            <Text style={{ fontSize: 12, color: Colors.primary }}>
-              {item.unit} ▼
+            <Text style={CartScreenStyle.unitText}>
+              {item.unit || 'Unit'} ▼
             </Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Quantity Controls */}
       <View style={CartScreenStyle.quantityContainer}>
         <TouchableOpacity
           style={CartScreenStyle.quantityButton}
           onPress={() => updateQuantity(item.id, item.quantity - 1)}
           activeOpacity={0.8}
         >
-          <Text style={{ fontSize: 18, color: Colors.primary }}>−</Text>
+          <Text style={CartScreenStyle.quantityButtonText}>−</Text>
         </TouchableOpacity>
         <Text style={CartScreenStyle.quantityText}>{item.quantity}</Text>
         <TouchableOpacity
@@ -336,11 +339,10 @@ const CartScreen = () => {
           onPress={() => updateQuantity(item.id, item.quantity + 1)}
           activeOpacity={0.8}
         >
-          <Text style={{ fontSize: 18, color: Colors.primary }}>+</Text>
+          <Text style={CartScreenStyle.quantityButtonText}>+</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Delete Button */}
       <TouchableOpacity
         style={CartScreenStyle.deleteButton}
         onPress={() => {
@@ -354,7 +356,6 @@ const CartScreen = () => {
     </View>
   );
 
-  // Render Empty State
   const renderEmptyState = () => (
     <View style={CartScreenStyle.emptyContainer}>
       <Text style={CartScreenStyle.emptyIcon}>🛒</Text>
@@ -372,7 +373,6 @@ const CartScreen = () => {
     </View>
   );
 
-  // Render Bottom Actions
   const renderBottomActions = () => {
     if (stats.total === 0) return null;
 
@@ -382,11 +382,13 @@ const CartScreen = () => {
           style={[
             CartScreenStyle.bottomButton,
             CartScreenStyle.clearCheckedButton,
+            stats.checked === 0 && CartScreenStyle.bottomButtonDisabled,
           ]}
           onPress={confirmClearChecked}
           activeOpacity={0.8}
+          disabled={stats.checked === 0}
         >
-          <Text style={{ fontSize: 16 }}>✓</Text>
+          <Text style={{ fontSize: 16, color: Colors.white }}>✓</Text>
           <Text style={CartScreenStyle.bottomButtonText}>
             Clear Shopped ({stats.checked})
           </Text>
@@ -397,14 +399,13 @@ const CartScreen = () => {
           onPress={confirmClearAll}
           activeOpacity={0.8}
         >
-          <Text style={{ fontSize: 16 }}>🗑️</Text>
+          <Text style={{ fontSize: 16, color: Colors.white }}>🗑️</Text>
           <Text style={CartScreenStyle.bottomButtonText}>Clear All</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
-  // Render Unit Picker Modal
   const renderUnitModal = () => (
     <Modal
       visible={unitModalVisible}
@@ -432,10 +433,12 @@ const CartScreen = () => {
                     CartScreenStyle.unitOptionActive,
                 ]}
               >
-                {unit}
+                {unit.charAt(0).toUpperCase() + unit.slice(1)}
               </Text>
               {selectedItemForUnit?.unit === unit && (
-                <Text style={{ color: Colors.primary }}>✓</Text>
+                <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>
+                  ✓
+                </Text>
               )}
             </TouchableOpacity>
           ))}
@@ -446,9 +449,8 @@ const CartScreen = () => {
 
   return (
     <SafeAreaView style={CartScreenStyle.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
 
-      {/* Toast */}
       <Toast
         visible={toastVisible}
         message={toastMessage}
@@ -456,19 +458,17 @@ const CartScreen = () => {
         onHide={() => setToastVisible(false)}
       />
 
-      {/* Header */}
       {renderHeader()}
 
-      {/* Stats Bar */}
-      {stats.total > 0 && renderStatsBar()}
+      {stats.total > 0 && (
+        <>
+          {renderStatsBar()}
+          {renderSortBar()}
+        </>
+      )}
 
-      {/* Sort Bar */}
-      {stats.total > 0 && renderSortBar()}
-
-      {/* Add Custom Item */}
       {renderAddCustomSection()}
 
-      {/* Cart List */}
       <FlatList
         data={cartItems}
         keyExtractor={item => item.id}
@@ -477,11 +477,7 @@ const CartScreen = () => {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={renderEmptyState}
       />
-
-      {/* Bottom Actions */}
       {renderBottomActions()}
-
-      {/* Unit Picker Modal */}
       {renderUnitModal()}
     </SafeAreaView>
   );

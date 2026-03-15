@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: responsiveWidth(4),
-    paddingVertical: responsiveHeight(1),
+    paddingVertical: responsiveHeight(0.5),
     borderRadius: responsiveHeight(3),
     marginRight: responsiveWidth(2),
   },

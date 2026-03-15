@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Screens
@@ -8,14 +8,11 @@ import Comingsoon from '../../components/molecules/Comingsoon';
 import WorkoutHomeScreen from '../WorkoutScreens/WorkoutHomeScreen';
 // Icons
 import HomeIcon from '../../assets/images/tabbar/newlogos/HomeIcon';
-import StoreIcon from '../../assets/images/tabbar/newlogos/StoreIcon';
 import JobsIcon from '../../assets/images/tabbar/newlogos/JobsIcon';
 import CartScreen from '../CartScreen/CartScreen';
 import WorkoutIconSvg from '../../assets/images/tabbar/newlogos/WorkoutIconSvg';
 
 import CartIcon from '../../assets/images/tabbar/newlogos/CartIcon';
-
-const windowHeight = Dimensions.get('window').height;
 
 const COLORS = {
   primary: '#7452D6',
@@ -30,7 +27,6 @@ const DashBoard = props => {
   const renderIcon = (IconComponent, focused) => (
     <View style={[styles.iconContainer, focused && styles.iconActiveContainer]}>
       <IconComponent fill={focused ? COLORS.primary : COLORS.inactive} />
-      {focused && <View style={styles.activeDot} />}
     </View>
   );
 

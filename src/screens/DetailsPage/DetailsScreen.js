@@ -15,19 +15,26 @@ import { useNavigation, useRoute } from '@react-navigation/core';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useTranslation } from 'react-i18next';
 
-// Context
 import { useCart } from '../../context/CartContext';
 import { useTheme } from '../../themes';
 import Button from '../../components/ui/Button';
 import Chip from '../../components/ui/Chip';
 
-// Styles & Assets
 import DetailsScreenStyle, { VIDEO_HEIGHT } from './DetailsScreenStyle';
 import LogoViewer from '../../components/common/LogoViewer';
-import { BackSvg, StarRating } from '../../assets/images/SvgImages';
+import {
+  AddCircleSVG,
+  BackSvg,
+  CircleCheckSVG,
+  CloseCircleSVG,
+  StarRating,
+} from '../../assets/images/SvgImages';
 import Toast from '../../components/Toast';
-// NOTE: Importing categories data to look up localized category name
 import categories from '../../assets/data/categories';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 const DetailsScreen = () => {
   const navigation = useNavigation();
@@ -40,31 +47,25 @@ const DetailsScreen = () => {
 
   // Data
   const food = route.params?.food;
-  // Get videoList from the new food structure
   const videoList = food?.meta?.video?.playlist || [];
 
-  // Get current screen dimensions
   const [dimensions, setDimensions] = useState(() => {
     const { width, height } = Dimensions.get('screen');
     return { width, height };
   });
 
-  // State
   const [activeTab, setActiveTab] = useState('recipe');
   const [playing, setPlaying] = useState(false);
   const [currentVideoId, setCurrentVideoId] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [videoMetadata, setVideoMetadata] = useState({});
 
-  // Toast State
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
 
-  // Cart Stats
   const cartStats = getCartStats();
 
-  // Listen to dimension changes
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ screen }) => {
       setDimensions({
@@ -76,14 +77,11 @@ const DetailsScreen = () => {
     return () => subscription?.remove();
   }, []);
 
-  // --- Localization Helpers ---
   const getLocalizedContent = useCallback(
     key => {
       const content = food?.content || {};
-      // Prioritize current language, then English fallback
       const localizedValue =
         content[currentLanguage]?.[key] || content.en?.[key];
-      // Note: Ingredients and steps are arrays/objects, we return them directly
       return localizedValue || '';
     },
     [food, currentLanguage],
@@ -97,7 +95,6 @@ const DetailsScreen = () => {
     return getLocalizedContent('description');
   }, [getLocalizedContent]);
 
-  // Helper to get localized category name from slug
   const getLocalizedCategoryName = useCallback(() => {
     const primaryCategorySlug = food?.meta?.categoryIds?.[0];
     if (!primaryCategorySlug) return '';
@@ -105,7 +102,6 @@ const DetailsScreen = () => {
     const translationKey = `categories.items.${primaryCategorySlug}.name`;
     const translated = t(translationKey, { defaultValue: '' });
 
-    // Fallback: search the imported 'categories' array for the display name if translation fails
     const categoryObject = categories.find(
       c => c.category === primaryCategorySlug,
     );
@@ -119,7 +115,6 @@ const DetailsScreen = () => {
       : fallbackName;
   }, [food, t]);
 
-  // Generate Default Metadata (Updated to use localized name)
   const generateDefaultMetadata = useCallback(() => {
     const metadata = {};
     const recipeTitle = getLocalizedName();
@@ -133,16 +128,13 @@ const DetailsScreen = () => {
     setVideoMetadata(metadata);
   }, [videoList, getLocalizedName]);
 
-  // Initialize Video
   useEffect(() => {
     if (videoList && videoList.length > 0) {
-      // Assuming videoList is an array of video IDs (strings)
       setCurrentVideoId(videoList[0]);
       generateDefaultMetadata();
     }
   }, [videoList, generateDefaultMetadata]);
 
-  // Handle Android Back Button
   useEffect(() => {
     const backAction = () => {
       if (isFullScreen) {
@@ -159,19 +151,16 @@ const DetailsScreen = () => {
     return () => backHandler.remove();
   }, [isFullScreen]);
 
-  // --- Utility Functions ---
   const getYouTubeThumbnail = videoId => {
     return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
   };
 
-  // Show Toast
   const showToast = (message, type = 'success') => {
     setToastMessage(message);
     setToastType(type);
     setToastVisible(true);
   };
 
-  // --- Handlers ---
   const onStateChange = useCallback(state => {
     if (state === 'ended') {
       setPlaying(false);
@@ -183,18 +172,15 @@ const DetailsScreen = () => {
     setPlaying(true);
   };
 
-  // Enter Fullscreen
   const enterFullScreen = () => {
     setIsFullScreen(true);
     setPlaying(true);
   };
 
-  // Exit Fullscreen
   const exitFullScreen = () => {
     setIsFullScreen(false);
   };
 
-  // Handle Ingredient Click (Accepts the string name)
   const handleIngredientPress = ingredientName => {
     if (isInCart(ingredientName)) {
       removeByName(ingredientName);
@@ -205,11 +191,9 @@ const DetailsScreen = () => {
     }
   };
 
-  // Add All Ingredients (Accepts the array of ingredient objects)
   const handleAddAllIngredients = ingredientsData => {
     let addedCount = 0;
 
-    // Iterate over the ingredient objects
     ingredientsData?.forEach(ingredientObj => {
       const ingredientName = ingredientObj.item;
 
@@ -226,12 +210,9 @@ const DetailsScreen = () => {
     }
   };
 
-  // Navigate to Cart
   const goToCart = () => {
     navigation.navigate('CartScreen');
   };
-
-  // --- Render Components ---
 
   const renderNavBar = () => (
     <View style={DetailsScreenStyle.navBarContainer}>
@@ -276,7 +257,6 @@ const DetailsScreen = () => {
     </View>
   );
 
-  // 2. Video Section
   const renderVideoSection = () => (
     <View style={DetailsScreenStyle.videoContainer}>
       {currentVideoId ? (
@@ -308,23 +288,18 @@ const DetailsScreen = () => {
     </View>
   );
 
-  // 3. Fullscreen Video Modal (Landscape with rotation)
   const renderFullScreenModal = () => {
     const screenWidth = dimensions.width;
     const screenHeight = dimensions.height;
 
-    // Landscape dimensions
     const landscapeWidth = Math.max(screenWidth, screenHeight);
     const landscapeHeight = Math.min(screenWidth, screenHeight);
 
-    // Check if device is currently in portrait
     const isPortrait = screenHeight > screenWidth;
 
-    // Calculate video dimensions maintaining 16:9 aspect ratio
     let videoWidth = landscapeWidth;
     let videoHeight = landscapeWidth * (9 / 16);
 
-    // If calculated height exceeds available height, fit to height instead
     if (videoHeight > landscapeHeight) {
       videoHeight = landscapeHeight;
       videoWidth = landscapeHeight * (16 / 9);
@@ -375,7 +350,6 @@ const DetailsScreen = () => {
               }}
             />
 
-            {/* Exit Button */}
             <TouchableOpacity
               style={DetailsScreenStyle.fullScreenExitBtn}
               onPress={exitFullScreen}
@@ -409,6 +383,14 @@ const DetailsScreen = () => {
           >
             🥗 {t('recipe.ingredients')}
           </Text>
+
+          <Button
+            disabled={false}
+            onclick={() => handleAddAllIngredients(ingredientsData)}
+            btntext="Add All"
+            width={responsiveWidth(20)}
+            height={responsiveHeight(3)}
+          />
           <Text
             style={[
               DetailsScreenStyle.sectionBadge,
@@ -434,15 +416,21 @@ const DetailsScreen = () => {
                 selected={inCart}
                 onPress={() => handleIngredientPress(ingredientName)}
                 rightIcon={
-                  <Text
-                    style={{
-                      color: colors.white,
-                      fontSize: 12,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {inCart ? '✓' : '+'}
-                  </Text>
+                  <>
+                    {inCart ? (
+                      <LogoViewer
+                        Logosource={CircleCheckSVG}
+                        containerstyle={DetailsScreenStyle.loginImgContainer}
+                        logostyle={DetailsScreenStyle.loginImg}
+                      />
+                    ) : (
+                      <LogoViewer
+                        Logosource={AddCircleSVG}
+                        containerstyle={DetailsScreenStyle.loginImgContainer}
+                        logostyle={DetailsScreenStyle.addItem}
+                      />
+                    )}
+                  </>
                 }
                 style={DetailsScreenStyle.ingredientChip}
                 showBorder={true}
@@ -450,14 +438,6 @@ const DetailsScreen = () => {
             );
           })}
         </View>
-
-        <Button
-          disabled={false}
-          onclick={() => handleAddAllIngredients(ingredientsData)}
-          btntext="Add All to Cart"
-          variant="primary"
-          buttonctn={DetailsScreenStyle.addAllButtonContainer}
-        />
 
         <View style={{ height: 30 }} />
         <Text
@@ -492,11 +472,10 @@ const DetailsScreen = () => {
     );
   };
 
-  // 5. Videos Tab
   const renderVideoListTab = () => (
     <View style={DetailsScreenStyle.sectionContainer}>
       <Text style={[DetailsScreenStyle.sectionHeader, { color: colors.text }]}>
-        🎬 Available Videos ({videoList.length})
+        Available Videos ({videoList.length})
       </Text>
 
       {videoList && videoList.length > 0 ? (
@@ -582,20 +561,19 @@ const DetailsScreen = () => {
     </View>
   );
 
-  // 6. Tab Bar with Chips
   const renderTabBar = () => (
     <View
       style={[DetailsScreenStyle.tabBar, { borderBottomColor: colors.divider }]}
     >
       <Chip
-        label="📋 Recipe"
+        label="Recipe"
         selected={activeTab === 'recipe'}
         onPress={() => setActiveTab('recipe')}
-        style={DetailsScreenStyle.tabChip}
+        style={[DetailsScreenStyle.tabChip]}
         showBorder={false}
       />
       <Chip
-        label={`🎬 Videos (${videoList.length})`}
+        label={` Videos (${videoList.length})`}
         selected={activeTab === 'videos'}
         onPress={() => setActiveTab('videos')}
         style={DetailsScreenStyle.tabChip}
@@ -604,7 +582,6 @@ const DetailsScreen = () => {
     </View>
   );
 
-  // --- Main Render ---
   return (
     <SafeAreaView
       style={[
@@ -617,7 +594,6 @@ const DetailsScreen = () => {
         backgroundColor={colors.background}
       />
 
-      {/* Toast */}
       <Toast
         visible={toastVisible}
         message={toastMessage}
@@ -625,21 +601,16 @@ const DetailsScreen = () => {
         onHide={() => setToastVisible(false)}
       />
 
-      {/* Fullscreen Modal */}
       {renderFullScreenModal()}
 
-      {/* Nav Bar */}
       {renderNavBar()}
 
-      {/* Video Section */}
       {renderVideoSection()}
 
-      {/* Scrollable Content */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={DetailsScreenStyle.scrollContent}
       >
-        {/* Info Section */}
         <View style={DetailsScreenStyle.infoSection}>
           <View style={DetailsScreenStyle.titleRow}>
             <View style={DetailsScreenStyle.titleTextContainer}>
@@ -704,10 +675,8 @@ const DetailsScreen = () => {
           </Text>
         </View>
 
-        {/* Tab Bar */}
         {renderTabBar()}
 
-        {/* Tab Content */}
         {activeTab === 'recipe' ? renderRecipeTab() : renderVideoListTab()}
       </ScrollView>
     </SafeAreaView>

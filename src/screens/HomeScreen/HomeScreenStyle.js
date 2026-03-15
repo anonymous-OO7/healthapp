@@ -1,14 +1,12 @@
 import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 import {
   responsiveWidth,
-  responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import { Colors } from '../../assets/colors';
 
 const { width } = Dimensions.get('window');
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
-
 const Theme = {
   background: '#FAFAFA',
   white: '#FFFFFF',
@@ -20,6 +18,10 @@ const Theme = {
   green: '#4CAF50',
   red: '#E53935',
 };
+
+const ITEM_MARGIN = 8;
+const HORIZONTAL_PADDING = 16;
+const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING * 2 - ITEM_MARGIN) / 2;
 
 const HomeScreenStyle = StyleSheet.create({
   safeArea: {
@@ -35,7 +37,6 @@ const HomeScreenStyle = StyleSheet.create({
   fixedHeaderContainer: {
     backgroundColor: Theme.background,
     zIndex: 10,
-    paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.03)',
   },
@@ -104,7 +105,7 @@ const HomeScreenStyle = StyleSheet.create({
   searchBoxWrapper: {
     flex: 1,
     marginRight: 12,
-    height: 45,
+    height: 40,
     justifyContent: 'center',
   },
   filterBtn: {
@@ -189,16 +190,20 @@ const HomeScreenStyle = StyleSheet.create({
 
   recipeListContainer: {
     flex: 1,
+    paddingHorizontal: ITEM_MARGIN,
     backgroundColor: Theme.background,
+  },
+
+  columnWrapper: {
+    justifyContent: 'space-between',
+    marginBottom: 2 * ITEM_MARGIN,
   },
   flatListContent: {
     paddingTop: 10,
     paddingBottom: 100,
     paddingHorizontal: responsiveWidth(4),
   },
-  columnWrapper: {
-    justifyContent: 'space-between',
-  },
+
   listTitleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -207,6 +212,8 @@ const HomeScreenStyle = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
+
+  //card styles
 
   cardContainer: {
     width: (width - responsiveWidth(8) - 15) / 2,
@@ -270,6 +277,7 @@ const HomeScreenStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -373,14 +381,11 @@ const HomeScreenStyle = StyleSheet.create({
     paddingVertical: 4,
     borderTopWidth: 1,
     borderTopColor: '#EFEFEF',
-    // Shadow for iOS
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    // Elevation for Android
     elevation: 8,
-    // Safe area padding for devices with home indicator
     paddingBottom: Platform.OS === 'ios' ? 20 : 4,
   },
 
@@ -388,9 +393,6 @@ const HomeScreenStyle = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 
-  /**
-   * Inline Ad Container (for ads within the list)
-   */
   inlineAdContainer: {
     width: SCREEN_WIDTH - 32,
     alignItems: 'center',
@@ -422,6 +424,40 @@ const HomeScreenStyle = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 10,
     fontWeight: '600',
+  },
+  foodRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: ITEM_MARGIN * 2,
+  },
+  foodCardWrapper: {
+    width: ITEM_WIDTH,
+  },
+  foodCardFirst: {
+    marginRight: ITEM_MARGIN / 2,
+  },
+  foodCardLast: {
+    marginLeft: ITEM_MARGIN / 2,
+  },
+  foodCardPlaceholder: {
+    width: ITEM_WIDTH,
+    marginLeft: ITEM_MARGIN / 2,
+  },
+  inFeedAdContainer: {
+    width: '100%',
+    marginVertical: ITEM_MARGIN,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  inFeedAd: {
+    paddingVertical: 12,
   },
 });
 

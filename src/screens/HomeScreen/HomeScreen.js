@@ -7,10 +7,10 @@ import {
   ScrollView,
   Image,
   FlatList,
-  TouchableHighlight,
   StatusBar,
   Modal,
   Platform,
+  Dimensions,
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/core';
@@ -21,12 +21,12 @@ import HomeScreenStyle from './HomeScreenStyle';
 import { Colors } from '../../assets/colors';
 import recipes from '../../assets/data/data';
 import categories from '../../assets/data/categories';
+import { TestIds } from 'react-native-google-mobile-ads';
 
-// import { recipies } from '../../assets/data'; // Removing this import
-
-import LogoViewer from '../../components/common/LogoViewer';
 import SearchClick from '../../components/molecules/SearchClick';
-import VegNon from '../../components/common/VegNon';
+import DietPickerModal from '../../components/molecules/DietPickerModal';
+import FoodCard from '../../components/molecules/FoodCard';
+
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import {
   BannerAdComponent,
@@ -34,143 +34,49 @@ import {
 } from '../../components/molecules/ads';
 import { useInterstitialAd } from '../../../src/common/hooks/useInterstitialAd';
 
-import { StarRating } from '../../assets/images/SvgImages';
-import { SCREEN_WIDTH } from '../DetailsPage/DetailsScreenStyle';
 import Chip from '../../components/ui/Chip';
 
-const FoodCard = ({ food, onPress, t, i18nLanguage }) => {
-  const localizedTitle =
-    food.content[i18nLanguage]?.title || food.content.en.title;
-  const deliveryTime = food.meta.totalTimeString || '30 min';
-  const rating = food.meta.rating;
-  const isVeg = food.meta.isVeg;
+const ITEMS_PER_ROW = 2;
+const ROWS_PER_AD = 3;
 
-  const getLocalizedPrimaryCategoryName = () => {
-    const primaryCategorySlug = food.meta.categoryIds[0];
-    if (!primaryCategorySlug) return '';
-    const translationKey = `categories.items.${primaryCategorySlug}.name`;
-    const translated = t(translationKey, { defaultValue: '' });
+const getRowBasedList = list => {
+  const result = [];
+  let foodBuffer = [];
+  let rowIndex = 0;
+  let adIndex = 0;
 
-    const categoryObject = categories.find(
-      c => c.category === primaryCategorySlug,
-    );
-    const fallbackName = categoryObject
-      ? categoryObject.display
-      : primaryCategorySlug.charAt(0).toUpperCase() +
-        primaryCategorySlug.slice(1);
+  list.forEach((item, index) => {
+    foodBuffer.push(item);
 
-    return translated && translated !== translationKey
-      ? translated
-      : fallbackName;
-  };
+    if (foodBuffer.length === ITEMS_PER_ROW) {
+      result.push({
+        type: 'row',
+        id: `row-${rowIndex}`,
+        items: [...foodBuffer],
+      });
+      foodBuffer = [];
+      rowIndex++;
 
-  return (
-    <TouchableHighlight
-      underlayColor="transparent"
-      activeOpacity={0.9}
-      onPress={() => onPress(food)}
-      style={HomeScreenStyle.cardContainer}
-    >
-      <View style={HomeScreenStyle.cardInner}>
-        <View style={HomeScreenStyle.cardImageContainer}>
-          <Image
-            source={{ uri: food.meta.thumbnail || food.meta.images[0] }}
-            style={HomeScreenStyle.cardImage}
-            resizeMode="cover"
-          />
-          <View style={HomeScreenStyle.ratingBadge}>
-            <LogoViewer
-              Logosource={StarRating}
-              containerstyle={{ width: 10, height: 10 }}
-              logostyle={{ width: 10, height: 10 }}
-            />
-            <Text style={HomeScreenStyle.ratingBadgeText}>{rating}</Text>
-          </View>
-        </View>
-        <View style={HomeScreenStyle.cardContent}>
-          <Text style={HomeScreenStyle.cardTitle} numberOfLines={1}>
-            {localizedTitle}
-          </Text>
-          <Text style={HomeScreenStyle.cardSubTitle} numberOfLines={1}>
-            {getLocalizedPrimaryCategoryName()}
-          </Text>
-          <View style={HomeScreenStyle.cardFooter}>
-            <View style={HomeScreenStyle.metaRow}>
-              <VegNon isVeg={isVeg} size={14} />
-              <View style={HomeScreenStyle.verticalDivider} />
-              <Text style={HomeScreenStyle.timeText}>{deliveryTime}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </TouchableHighlight>
-  );
-};
+      if (rowIndex % ROWS_PER_AD === 0 && index < list.length - 1) {
+        result.push({
+          type: 'ad',
+          id: `ad-${rowIndex}`,
+          adIndex: adIndex,
+        });
+        adIndex++;
+      }
+    }
+  });
 
-const DietPickerModal = ({
-  isVisible,
-  onClose,
-  onSelect,
-  currentFilter,
-  t,
-}) => {
-  const options = [
-    { key: 'all', label: t('filters.all'), color: '#999' },
-    { key: 'veg', label: t('filters.veg'), color: '#4CAF50' },
-    { key: 'non-veg', label: t('filters.nonVeg'), color: '#E53935' },
-  ];
+  if (foodBuffer.length > 0) {
+    result.push({
+      type: 'row',
+      id: `row-${rowIndex}`,
+      items: [...foodBuffer],
+    });
+  }
 
-  return (
-    <Modal
-      visible={isVisible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={onClose}
-    >
-      <TouchableOpacity
-        style={HomeScreenStyle.modalOverlay}
-        activeOpacity={1}
-        onPress={onClose}
-      >
-        <View style={HomeScreenStyle.modalContentCenter}>
-          <Text style={HomeScreenStyle.modalTitle}>
-            {t('filters.selectDiet')}
-          </Text>
-          {options.map(opt => (
-            <TouchableOpacity
-              key={opt.key}
-              style={HomeScreenStyle.dietOptionItem}
-              onPress={() => {
-                onSelect(opt.key);
-                onClose();
-              }}
-            >
-              <View
-                style={[
-                  HomeScreenStyle.dietOptionDot,
-                  { backgroundColor: opt.color },
-                ]}
-              />
-              <Text
-                style={[
-                  HomeScreenStyle.dietOptionText,
-                  currentFilter === opt.key && {
-                    fontWeight: '700',
-                    color: opt.color,
-                  },
-                ]}
-              >
-                {opt.label}
-              </Text>
-              {currentFilter === opt.key && (
-                <Text style={{ marginLeft: 'auto', color: opt.color }}>✓</Text>
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
-      </TouchableOpacity>
-    </Modal>
-  );
+  return result;
 };
 
 const HomeScreen = props => {
@@ -186,13 +92,13 @@ const HomeScreen = props => {
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showDietModal, setShowDietModal] = useState(false);
 
-  const getLocalizedGreeting = () => {
+  const getLocalizedGreeting = useMemo(() => {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 12) return t('greeting.morning');
     if (hour >= 12 && hour < 17) return t('greeting.afternoon');
     if (hour >= 17 && hour < 21) return t('greeting.evening');
     return t('greeting.night');
-  };
+  }, [t]);
 
   const getLocalizedCategoryName = categoryKey => {
     const safeCategory = (categoryKey || '').toLowerCase().replace(/\s+/g, '');
@@ -206,7 +112,7 @@ const HomeScreen = props => {
       : categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
   };
 
-  const currentList = useMemo(() => {
+  const filteredRecipes = useMemo(() => {
     let result = recipes;
 
     if (selectedCategorySlug !== 'all') {
@@ -221,7 +127,12 @@ const HomeScreen = props => {
     }
 
     return result;
-  }, [recipes, selectedCategorySlug, dietFilter]);
+  }, [selectedCategorySlug, dietFilter]);
+
+  const currentList = useMemo(
+    () => getRowBasedList(filteredRecipes),
+    [filteredRecipes],
+  );
 
   const handleCategoryPress = categorySlug => {
     setSelectedCategorySlug(categorySlug);
@@ -244,11 +155,6 @@ const HomeScreen = props => {
     [navigation, showAdThenNavigate],
   );
 
-  const resetFilters = () => {
-    setSelectedCategorySlug('all');
-    setDietFilter('all');
-  };
-
   const getDietIconInfo = () => {
     switch (dietFilter) {
       case 'veg':
@@ -261,6 +167,79 @@ const HomeScreen = props => {
   };
 
   const dietInfo = getDietIconInfo();
+
+  const PRODUCTION_AD_UNIT_IDS = [
+    'ca-app-pub-2888315269414105/2637642671',
+    'ca-app-pub-2888315269414105/9861526576',
+    'ca-app-pub-2888315269414105/7235363236',
+    'ca-app-pub-2888315269414105/9501793290',
+    'ca-app-pub-2888315269414105/6385315994',
+    'ca-app-pub-2888315269414105/3759152656',
+  ];
+
+  const getAdUnitId = adIndex => {
+    if (__DEV__) {
+      return TestIds.BANNER;
+    }
+    return PRODUCTION_AD_UNIT_IDS[adIndex % PRODUCTION_AD_UNIT_IDS.length];
+  };
+
+  const renderFoodRow = items => {
+    return (
+      <View style={HomeScreenStyle.foodRow}>
+        {items.map((food, index) => (
+          <View
+            key={food.id}
+            style={[
+              HomeScreenStyle.foodCardWrapper,
+              index === 0 && HomeScreenStyle.foodCardFirst,
+              index === items.length - 1 && HomeScreenStyle.foodCardLast,
+            ]}
+          >
+            <FoodCard
+              food={food}
+              onPress={gotoDetail}
+              t={t}
+              i18nLanguage={currentLanguage}
+            />
+          </View>
+        ))}
+        {items.length < ITEMS_PER_ROW && (
+          <View style={HomeScreenStyle.foodCardPlaceholder} />
+        )}
+      </View>
+    );
+  };
+
+  const renderAd = adIndex => {
+    const unitId = getAdUnitId(adIndex);
+
+    return (
+      <View style={HomeScreenStyle.inFeedAdContainer}>
+        <BannerAdComponent
+          size={BannerAdSize.MEDIUM_RECTANGLE}
+          containerStyle={HomeScreenStyle.inFeedAd}
+          unitId={unitId}
+        />
+      </View>
+    );
+  };
+
+  const renderListItem = ({ item }) => {
+    if (item.type === 'ad') {
+      return renderAd();
+    }
+
+    if (item.type === 'row') {
+      return renderFoodRow(item.items);
+    }
+
+    return null;
+  };
+
+  const renderListFooter = () => {
+    return <View style={{ height: 100 }} />;
+  };
 
   return (
     <SafeAreaView style={HomeScreenStyle.safeArea}>
@@ -279,7 +258,7 @@ const HomeScreen = props => {
           <View style={HomeScreenStyle.topBar}>
             <View style={{ flex: 1 }}>
               <Text style={HomeScreenStyle.greetingText}>
-                {getLocalizedGreeting()},
+                {getLocalizedGreeting},
               </Text>
               <Text style={HomeScreenStyle.mainTitleText}>
                 {t('home.whatDoYouWant')}
@@ -297,7 +276,6 @@ const HomeScreen = props => {
               >
                 <Text style={{ fontSize: 18 }}>{dietInfo.text}</Text>
               </TouchableOpacity>
-
               <TouchableOpacity
                 style={HomeScreenStyle.headerIconBtn}
                 onPress={() => setShowLanguageModal(true)}
@@ -307,7 +285,6 @@ const HomeScreen = props => {
                   {currentLanguage === 'en' ? '🇺🇸' : '🇮🇳'}
                 </Text>
               </TouchableOpacity>
-
               <Image
                 source={{
                   uri: 'https://static.vecteezy.com/system/resources/previews/019/900/322/non_2x/happy-young-cute-illustration-face-profile-png.png',
@@ -358,53 +335,18 @@ const HomeScreen = props => {
       <View style={HomeScreenStyle.recipeListContainer}>
         <FlatList
           data={currentList}
-          keyExtractor={item => `recipe-${item.id}`}
-          numColumns={2}
+          keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={[
-            HomeScreenStyle.flatListContent,
-            { paddingBottom: 80 },
-          ]}
-          columnWrapperStyle={HomeScreenStyle.columnWrapper}
-          renderItem={({ item }) => (
-            <FoodCard
-              food={item}
-              onPress={gotoDetail}
-              t={t}
-              i18nLanguage={currentLanguage}
-            />
-          )}
-          ListEmptyComponent={() => (
-            <View style={HomeScreenStyle.emptyContainer}>
-              <Image
-                source={{
-                  uri: 'https://cdn-icons-png.flaticon.com/512/11329/11329060.png',
-                }}
-                style={{
-                  width: 80,
-                  height: 80,
-                  opacity: 0.4,
-                  marginBottom: 15,
-                }}
-              />
-              <Text style={HomeScreenStyle.emptyText}>
-                {t('messages.noResults')}
-              </Text>
-              <TouchableOpacity
-                style={HomeScreenStyle.resetButton}
-                onPress={resetFilters}
-              >
-                <Text style={HomeScreenStyle.resetButtonText}>
-                  {t('filters.reset')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          contentContainerStyle={HomeScreenStyle.flatListContent}
+          renderItem={renderListItem}
+          ListFooterComponent={renderListFooter}
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={10}
+          initialNumToRender={6}
         />
-        <View style={{ width: SCREEN_WIDTH, height: 60 }} />
       </View>
 
-      {/* Bottom Banner Ad */}
       <View style={HomeScreenStyle.bottomBannerContainer}>
         <BannerAdComponent
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -412,7 +354,6 @@ const HomeScreen = props => {
         />
       </View>
 
-      {/* Modals */}
       <Modal
         visible={showLanguageModal}
         transparent={true}

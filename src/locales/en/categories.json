@@ -6,41 +6,75 @@
     "breakfast": { "name": "Breakfast", "description": "Morning meals" },
     "lunch": { "name": "Lunch", "description": "Midday meals" },
     "dinner": { "name": "Dinner", "description": "Evening meals" },
-    "snack": { "name": "Snacks", "description": "Quick bites" },
+    "healthy": { "name": "Healthy", "description": "Healthy options" },
     "snacks": { "name": "Snacks", "description": "Quick bites" },
     "desserts": { "name": "Desserts", "description": "Sweet treats" },
-    "sweet": { "name": "Sweets", "description": "Traditional Indian sweets" },
-    "sweets": { "name": "Sweets", "description": "Traditional Indian sweets" },
-    "beverages": {
-      "name": "Beverages",
-      "description": "Drinks and refreshments"
+    "salads": { "name": "Salads", "description": "Fresh and light salads" },
+    "drinks": {
+      "name": "Drinks & Beverages",
+      "description": "Refreshments and cocktails"
     },
-
-    "biriyani": { "name": "Biryani", "description": "Rice dishes" },
-    "curries": { "name": "Curries", "description": "Main course curries" },
-    "bread": { "name": "Breads", "description": "Indian breads" },
-    "south_indian": {
-      "name": "South Indian",
-      "description": "South Indian cuisine"
+    "soups": { "name": "Soups", "description": "Warm and hearty soups" },
+    "pizza": { "name": "Pizza", "description": "Delicious Pizzas" },
+    "burger": { "name": "Burger", "description": "Tasty Burgers" },
+    "sandwich": {
+      "name": "Sandwich",
+      "description": "Quick and customizable sandwiches"
+    },
+    "pasta": { "name": "Pasta", "description": "Italian pasta dishes" },
+    "rice_biriyani": {
+      "name": "Rice & Biriyani",
+      "description": "Rice-based main courses"
+    },
+    "indian": {
+      "name": "Indian",
+      "description": "A wide range of Indian cuisine"
     },
     "north_indian": {
       "name": "North Indian",
-      "description": "North Indian cuisine"
+      "description": "Cuisine from Northern India"
+    },
+    "south_indian": {
+      "name": "South Indian",
+      "description": "Cuisine from Southern India"
+    },
+    "chinese": { "name": "Chinese", "description": "Classic Chinese Cuisine" },
+    "italian": { "name": "Italian", "description": "Authentic Italian dishes" },
+    "continental": {
+      "name": "Continental",
+      "description": "European and American dishes"
     },
     "street_food": {
       "name": "Street Food",
-      "description": "Popular street snacks"
+      "description": "Popular global street snacks"
     },
-    "non_veg": { "name": "Non-Veg", "description": "Non-vegetarian dishes" },
-    "veg": { "name": "Vegetarian", "description": "Vegetarian dishes" },
-
-    "healthy": { "name": "Healthy", "description": "Healthy options" },
-    "pizza": { "name": "Pizza", "description": "Delicious Pizzas" },
-    "burger": { "name": "Burger", "description": "Tasty Burgers" },
-    "rolls": { "name": "Rolls", "description": "Wraps and Rolls" },
-    "chinese": { "name": "Chinese", "description": "Chinese Cuisine" },
-    "sandwitch": { "name": "Sandwich", "description": "Breakfast Sandwiches" },
-    "cakes": { "name": "Cakes", "description": "Bakery items" },
-    "momos": { "name": "Momos", "description": "Steamed dumplings" }
+    "momos": {
+      "name": "Momos & Dumplings",
+      "description": "Steamed and fried dumplings"
+    },
+    "seafood": {
+      "name": "Seafood",
+      "description": "Dishes featuring fish and shellfish"
+    },
+    "vegan": {
+      "name": "Vegan",
+      "description": "Plant-based, no animal products"
+    },
+    "keto": {
+      "name": "Keto & Low Carb",
+      "description": "High-fat, low-carb diet recipes"
+    },
+    "gluten_free": {
+      "name": "Gluten Free",
+      "description": "Recipes without gluten"
+    },
+    "kids_special": {
+      "name": "Kids Special",
+      "description": "Fun and healthy recipes for children"
+    },
+    "festival_special": {
+      "name": "Festival & Special",
+      "description": "Recipes for holidays and events"
+    }
   }
 }

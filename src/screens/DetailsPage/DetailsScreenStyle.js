@@ -179,9 +179,9 @@ const DetailsScreenStyle = StyleSheet.create({
   },
   tabChip: {
     marginRight: responsiveWidth(3),
+    borderRadius: responsiveWidth(1),
   },
 
-  // --- Content Sections ---
   sectionContainer: {
     paddingHorizontal: responsiveWidth(5),
     paddingTop: 20,
@@ -220,6 +220,9 @@ const DetailsScreenStyle = StyleSheet.create({
   addAllButtonContainer: {
     marginTop: 10,
     marginBottom: 10,
+    width: responsiveWidth(5),
+    height: responsiveHeight(10),
+    backgroundColor: 'pink',
   },
 
   // Steps List
@@ -329,6 +332,24 @@ const DetailsScreenStyle = StyleSheet.create({
   },
   bottomBanner: {
     backgroundColor: 'transparent',
+  },
+  loginImgContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: responsiveWidth(3),
+    paddingLeft: responsiveWidth(1),
+  },
+  loginImg: {
+    height: responsiveHeight(3),
+    width: responsiveHeight(3),
+    fill: '#28a745',
+    stroke: '#fff',
+  },
+  addItem: {
+    height: responsiveHeight(2),
+    width: responsiveHeight(2),
+    fill: '#374957',
+    stroke: '#fff',
   },
 });
 

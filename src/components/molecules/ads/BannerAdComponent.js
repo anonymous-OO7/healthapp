@@ -11,11 +11,13 @@ import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { AdConfig } from '../../../utils/AdConfig';
 
 const BannerAdComponent = ({
+  unitId = AdConfig.BANNER_AD_UNIT_ID,
   size = BannerAdSize.ANCHORED_ADAPTIVE_BANNER,
   containerStyle,
 }) => {
   const [isAdLoaded, setIsAdLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const adUnitId = unitId || AdConfig.BANNER_AD_UNIT_ID;
 
   const handleAdLoaded = useCallback(() => {
     console.log('[BannerAd] Ad loaded successfully');
@@ -52,7 +54,7 @@ const BannerAdComponent = ({
       ]}
     >
       <BannerAd
-        unitId={AdConfig.BANNER_AD_UNIT_ID}
+        unitId={adUnitId}
         size={size}
         requestOptions={AdConfig.AD_REQUEST_CONFIG}
         onAdLoaded={handleAdLoaded}

@@ -1,10 +1,15 @@
 import React from 'react';
-import { View} from 'react-native';
+import { View } from 'react-native';
 
-const LogoViewer = ({Logosource, containerstyle, logostyle}) => {
+const LogoViewer = ({ Logosource, containerstyle, logostyle }) => {
   return (
     <View style={containerstyle}>
-      <Logosource height={logostyle.height} width={logostyle.width} />
+      <Logosource
+        height={logostyle.height}
+        width={logostyle.width}
+        fill={logostyle.fill}
+        stroke={logostyle.stroke}
+      />
     </View>
   );
 };
