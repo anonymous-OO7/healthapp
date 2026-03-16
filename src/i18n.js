@@ -60,10 +60,10 @@ i18n
   .use(languageDetector)
   .use(initReactI18next)
   .init({
-    compatibilityJSON: 'v3', // ⚠️ Required for Android
+    compatibilityJSON: 'v3',
     resources,
     fallbackLng: 'en',
-    debug: __DEV__, // Enable debug in development
+    debug: __DEV__,
     interpolation: {
       escapeValue: false,
     },
@@ -72,7 +72,6 @@ i18n
     },
   });
 
-// Log to verify initialization
 console.log('i18n initialized with languages:', Object.keys(resources));
 console.log('Current language:', i18n.language);
 

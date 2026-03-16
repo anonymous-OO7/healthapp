@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-
+import { View, Text, StyleSheet } from 'react-native';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -14,58 +7,61 @@ import {
 } from 'react-native-responsive-dimensions';
 import { NonSvg, VegSvg } from '../../assets/svgs/SvgImages';
 import LogoViewer from './LogoViewer';
-import { Colors } from '../../assets/colors';
+import { useTheme } from '../../themes';
 
-const VegNon = ({
-  disabled = true,
-}) => {
+const VegNon = ({ isVeg = true, size = 14, showLabel = false }) => {
+  const { colors } = useTheme();
+  const styles = createStyles(colors, size);
+
   return (
-    <View style={VegNonstyles.container}>
-
-
-
-        <LogoViewer
-          Logosource={disabled == true ? VegSvg: NonSvg}
-          containerstyle={VegNonstyles.loginImgContainer}
-          logostyle={VegNonstyles.loginImg}
-        />
-        {/* {
-          disabled == true ? <Text style={VegNonstyles.vegText}>VEG</Text> :<Text style={[VegNonstyles.vegText,{color:Colors.nonveg}]}>NON VEG</Text>
-        } */}
-    
+    <View style={styles.container}>
+      <LogoViewer
+        Logosource={isVeg ? VegSvg : NonSvg}
+        containerstyle={styles.iconContainer}
+        logostyle={styles.icon}
+      />
+      {showLabel && (
+        <Text
+          style={[
+            styles.labelText,
+            {
+              color: isVeg
+                ? colors.veg || '#2E7D32'
+                : colors.nonveg || '#C62828',
+            },
+          ]}
+        >
+          {isVeg ? 'VEG' : 'NON-VEG'}
+        </Text>
+      )}
     </View>
   );
 };
 
-const VegNonstyles = StyleSheet.create({
-  container: {
-    display:"flex",
-    flexDirection:"row",
-    justifyContent:"center",
-    alignContent:"center",
-    backgroundColor:"white",
-    justifyContent:"center"
-
-  },
-  loginImgContainer:{
-    backgroundColor:"white",
-    alignItems:"center",
-    justifyContent:"center",
-    width:responsiveWidth(3)
-  },
-  loginImg:{
-    height:responsiveHeight(3),
-    width:responsiveHeight(3),
-
-  },
-  vegText:{
-    fontSize: responsiveFontSize(1.4),
-    fontFamily: 'Rubik-Medium',
-    lineHeight: responsiveFontSize(3.4),
-    color: Colors.veg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});
+const createStyles = (colors, size) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    iconContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: size,
+      height: size,
+    },
+    icon: {
+      height: size,
+      width: size,
+    },
+    labelText: {
+      fontSize: responsiveFontSize(1.3),
+      fontFamily: 'Poppins-Medium',
+      marginLeft: 4,
+      textTransform: 'uppercase',
+      letterSpacing: 0.3,
+    },
+  });
 
 export default VegNon;

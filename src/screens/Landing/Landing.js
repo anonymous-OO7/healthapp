@@ -8,36 +8,37 @@ import {
   Dimensions,
   TouchableOpacity,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '../../assets/colors';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
-
+import { useTheme } from '../../themes';
 import { PrimaryButton } from '../../components/common/AppButton/Button';
+
 const { width, height } = Dimensions.get('window');
 
 const SLIDES = [
   {
     id: '1',
-    image: require('../../assets/images/onboardImage.png'),
+    image: require('../../assets/images/LandingImage1.png'),
     title: 'Discover Recipes',
     subtitle:
-      'Explore thousands of delicious recipes and find your next favorite meal.',
+      'Explore delicious recipes from around the world and add ingredients to your cart instantly.',
   },
   {
     id: '2',
-    image: require('../../assets/images/onboardImage.png'),
+    image: require('../../assets/images/LandingImage2.png'),
     title: 'Watch & Cook',
     subtitle:
-      'Follow along with step-by-step video tutorials for perfect results every time.',
+      'Learn with step-by-step video tutorials and cook your favorite dishes with ease.',
   },
   {
     id: '3',
-    image: require('../../assets/images/onboardImage.png'),
-    title: 'Smart Shopping',
+    image: require('../../assets/images/LandingImage3.png'),
+    title: 'Workout & Health',
     subtitle:
-      'Add ingredients directly to your cart and never miss an item again.',
+      'Follow guided workouts, track calories burned, and monitor your health progress.',
   },
 ];
 
@@ -45,6 +46,8 @@ const LandingScreen = () => {
   const navigation = useNavigation();
   const flatListRef = useRef(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const { colors, fonts } = useTheme();
+  const styles = createStyles(colors, fonts);
 
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
@@ -72,25 +75,33 @@ const LandingScreen = () => {
 
   const Slide = ({ item }) => {
     return (
-      <View style={style.slideContainer}>
-        <Image source={item.image} style={style.image} resizeMode="contain" />
-        <View style={style.textBlock}>
-          <Text style={style.title}>{item.title}</Text>
-          <Text style={style.subtitle}>{item.subtitle}</Text>
+      <View style={styles.slideContainer}>
+        <View style={styles.imageWrapper}>
+          <View style={styles.imageInnerContainer}>
+            <Image
+              source={item.image}
+              style={styles.image}
+              resizeMode="contain"
+            />
+          </View>
+        </View>
+        <View style={styles.textBlock}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.subtitle}>{item.subtitle}</Text>
         </View>
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={style.container}>
-      <StatusBar backgroundColor={Colors.white} barStyle="dark-content" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
 
       {/* Header with Skip Button */}
-      <View style={style.header}>
+      <View style={styles.header}>
         {currentSlideIndex < SLIDES.length - 1 && (
           <TouchableOpacity onPress={skip}>
-            <Text style={style.skipText}>Skip</Text>
+            <Text style={styles.skipText}>Skip</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -110,27 +121,28 @@ const LandingScreen = () => {
       />
 
       {/* Footer (Indicators + Button) */}
-      <View style={style.footer}>
+      <View style={styles.footer}>
         {/* Indicators */}
-        <View style={style.indicatorContainer}>
+        <View style={styles.indicatorContainer}>
           {SLIDES.map((_, index) => (
             <View
               key={index}
               style={[
-                style.indicator,
-                currentSlideIndex === index && style.activeIndicator,
+                styles.indicator,
+                currentSlideIndex === index && styles.activeIndicator,
               ]}
             />
           ))}
         </View>
 
         {/* Action Button */}
-        <View style={style.buttonContainer}>
+        <View style={styles.buttonContainer}>
           <PrimaryButton
             onPress={goNextSlide}
             title={
               currentSlideIndex === SLIDES.length - 1 ? 'Get Started' : 'Next'
             }
+            backgroundColor={colors.buttonPrimary}
           />
         </View>
       </View>
@@ -140,75 +152,101 @@ const LandingScreen = () => {
 
 export default LandingScreen;
 
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  header: {
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingHorizontal: 20,
-  },
-  skipText: {
-    color: Colors.primary,
-    fontFamily: 'Poppins-SemiBold', // Ensure you have this font or use 'fontWeight: "bold"'
-    fontSize: 16,
-  },
-  slideContainer: {
-    width: width,
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  image: {
-    height: '60%',
-    width: '90%',
-    marginTop: 20,
-  },
-  textBlock: {
-    marginTop: 20,
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: responsiveFontSize(3.5),
-    fontFamily: 'Poppins-Bold', // Or fontWeight: 'bold'
-    color: Colors.black,
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: responsiveFontSize(2),
-    fontFamily: 'Poppins-Regular',
-    color: Colors.grey || '#666',
-    textAlign: 'center',
-    lineHeight: 24,
-    maxWidth: '90%',
-  },
-  footer: {
-    height: height * 0.2, // Bottom 20% of screen
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-  },
-  indicatorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
-  indicator: {
-    height: 8, // Slightly smaller for cleaner look
-    width: 8,
-    backgroundColor: '#E0E0E0', // Light grey
-    marginHorizontal: 4,
-    borderRadius: 4,
-  },
-  activeIndicator: {
-    backgroundColor: Colors.primary,
-    width: 25, // Elongated active dot
-  },
-  buttonContainer: {
-    marginBottom: 10,
-  },
-});
+const createStyles = (colors, fonts) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.white,
+    },
+    header: {
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      paddingHorizontal: 20,
+    },
+    skipText: {
+      color: colors.buttonPrimary,
+      fontFamily: fonts?.medium || 'Poppins-Medium',
+      fontSize: 15,
+    },
+    slideContainer: {
+      width: width,
+      alignItems: 'center',
+      paddingHorizontal: 20,
+    },
+    imageWrapper: {
+      width: '90%',
+      height: '40%',
+      marginTop: 20,
+      borderRadius: 24,
+      backgroundColor: colors.imageBackground || '#F8F8F8',
+      // Shadow for iOS
+      shadowColor: colors.black || '#000',
+      shadowOffset: {
+        width: 0,
+        height: 8,
+      },
+      shadowOpacity: 0.15,
+      shadowRadius: 12,
+      // Shadow for Android
+      elevation: 10,
+      overflow: 'hidden',
+    },
+    imageInnerContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 10,
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+    },
+    textBlock: {
+      marginTop: 30,
+      alignItems: 'center',
+      paddingHorizontal: 20,
+    },
+    title: {
+      fontSize: responsiveFontSize(3),
+      fontFamily: fonts?.semiBold || 'Poppins-SemiBold',
+      color: colors.black,
+      textAlign: 'center',
+      marginBottom: 12,
+      letterSpacing: 0.3,
+    },
+    subtitle: {
+      fontSize: responsiveFontSize(1.8),
+      fontFamily: fonts?.regular || 'Poppins-Regular',
+      color: colors.grey || '#888888',
+      textAlign: 'center',
+      lineHeight: 22,
+      maxWidth: '90%',
+      letterSpacing: 0.2,
+    },
+    footer: {
+      height: height * 0.2,
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingBottom: 30,
+    },
+    indicatorContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 10,
+    },
+    indicator: {
+      height: 8,
+      width: 8,
+      backgroundColor: colors.lightGrey || '#E0E0E0',
+      marginHorizontal: 4,
+      borderRadius: 4,
+    },
+    activeIndicator: {
+      backgroundColor: colors.buttonPrimary,
+      width: 25,
+    },
+    buttonContainer: {
+      marginBottom: 10,
+    },
+  });

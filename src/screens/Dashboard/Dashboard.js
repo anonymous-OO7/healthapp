@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Screens
@@ -8,11 +8,10 @@ import Comingsoon from '../../components/molecules/Comingsoon';
 import WorkoutHomeScreen from '../WorkoutScreens/WorkoutHomeScreen';
 // Icons
 import HomeIcon from '../../assets/images/tabbar/newlogos/HomeIcon';
-import JobsIcon from '../../assets/images/tabbar/newlogos/JobsIcon';
 import CartScreen from '../CartScreen/CartScreen';
 import WorkoutIconSvg from '../../assets/images/tabbar/newlogos/WorkoutIconSvg';
-
 import CartIcon from '../../assets/images/tabbar/newlogos/CartIcon';
+import SettingsIcon from '../../assets/images/tabbar/newlogos/SettingsIcon';
 
 const COLORS = {
   primary: '#7452D6',
@@ -24,9 +23,19 @@ const COLORS = {
 const Tab = createBottomTabNavigator();
 
 const DashBoard = props => {
-  const renderIcon = (IconComponent, focused) => (
-    <View style={[styles.iconContainer, focused && styles.iconActiveContainer]}>
-      <IconComponent fill={focused ? COLORS.primary : COLORS.inactive} />
+  const renderIcon = (IconComponent, focused, label) => (
+    <View style={styles.iconContainer}>
+      <View style={[styles.iconWrapper, focused && styles.iconActiveContainer]}>
+        <IconComponent fill={focused ? COLORS.primary : COLORS.inactive} />
+      </View>
+      <Text
+        style={[
+          styles.tabLabel,
+          { color: focused ? COLORS.primary : COLORS.inactive },
+        ]}
+      >
+        {label}
+      </Text>
     </View>
   );
 
@@ -43,7 +52,7 @@ const DashBoard = props => {
         name="Home"
         children={() => <HomeScreen {...props} />}
         options={{
-          tabBarIcon: ({ focused }) => renderIcon(HomeIcon, focused),
+          tabBarIcon: ({ focused }) => renderIcon(HomeIcon, focused, 'Home'),
         }}
       />
 
@@ -51,7 +60,7 @@ const DashBoard = props => {
         name="CartScreen"
         children={() => <CartScreen {...props} />}
         options={{
-          tabBarIcon: ({ focused }) => renderIcon(CartIcon, focused),
+          tabBarIcon: ({ focused }) => renderIcon(CartIcon, focused, 'Shop'),
         }}
       />
 
@@ -59,15 +68,17 @@ const DashBoard = props => {
         name="WorkoutHome"
         children={() => <WorkoutHomeScreen {...props} />}
         options={{
-          tabBarIcon: ({ focused }) => renderIcon(WorkoutIconSvg, focused),
+          tabBarIcon: ({ focused }) =>
+            renderIcon(WorkoutIconSvg, focused, 'Workout'),
         }}
       />
 
       <Tab.Screen
-        name="JobsScreen"
+        name="SettingsScreen"
         children={() => <Comingsoon {...props} />}
         options={{
-          tabBarIcon: ({ focused }) => renderIcon(JobsIcon, focused),
+          tabBarIcon: ({ focused }) =>
+            renderIcon(SettingsIcon, focused, 'Settings'),
         }}
       />
     </Tab.Navigator>
@@ -83,7 +94,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     borderTopWidth: 0,
     elevation: 10,
-
     shadowColor: COLORS.shadow,
     shadowOffset: {
       width: 0,
@@ -91,17 +101,29 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-
     height: Platform.OS === 'ios' ? 90 : 70,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: 10,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    paddingTop: 6,
   },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
+    width: 60,
+  },
+  iconWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
     width: 50,
+    height: 30,
+  },
+  iconActiveContainer: {},
+  tabLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 4,
+    textAlign: 'center',
   },
   activeDot: {
     width: 5,

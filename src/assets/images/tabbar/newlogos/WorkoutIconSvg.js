@@ -8,8 +8,8 @@ import {
 function WorkoutIconSvg(props) {
   return (
     <Svg
-      width={responsiveWidth(9)}
-      height={responsiveHeight(9)}
+      width={responsiveWidth(8)}
+      height={responsiveHeight(8)}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
       xmlSpace="preserve"
