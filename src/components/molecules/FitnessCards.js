@@ -1,34 +1,32 @@
+// components/molecules/FitnessCards.js
 import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import React from 'react';
-import fitness from '../../assets/data/fitness';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+// Note: Import the data file you created in Step 1
+import fitnessData from '../../assets/data/fitness';
 
 const FitnessCards = () => {
-  const FitnessData = fitness;
   const navigation = useNavigation();
 
   return (
     <View>
-      {FitnessData.map((item, key) => (
+      {fitnessData.map((item, index) => (
         <Pressable
           onPress={() =>
-            navigation.navigate('Workout', {
-              image: item.image,
-              excersises: item.excersises,
-              id: item.id,
-            })
+            navigation.navigate('Workout', { exercises: item.exercises })
           }
           style={styles.cardContainer}
-          key={key}
+          key={index}
         >
-          <Image style={styles.cardImage} source={{ uri: item.image }} />
-          <Text style={styles.cardTitle}>{item.name}</Text>
+          <View style={styles.cardLeft}>
+            <Image style={styles.cardImage} source={{ uri: item.image }} />
+            <Text style={styles.cardTitle}>{item.name}</Text>
+          </View>
           <MaterialCommunityIcons
-            style={styles.iconStyle}
             name="lightning-bolt"
             size={24}
-            color="white"
+            color="#0066FF"
           />
         </Pressable>
       ))}
@@ -40,26 +38,16 @@ export default FitnessCards;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
     margin: 10,
-  },
-  cardImage: {
-    width: '95%',
-    height: 140,
+    marginHorizontal: 15,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
     borderRadius: 7,
   },
-  cardTitle: {
-    position: 'absolute',
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    left: 20,
-    top: 20,
-  },
-  iconStyle: {
-    position: 'absolute',
-    bottom: 15,
-    left: 20,
-  },
+  cardLeft: { flexDirection: 'row', alignItems: 'center' },
+  cardImage: { width: 40, height: 40, borderRadius: 5, marginRight: 15 },
+  cardTitle: { fontSize: 16, fontWeight: 'bold' },
 });

@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'ios' ? 90 : 70,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
-    paddingTop: 6,
+    paddingTop: 8,
   },
   iconContainer: {
     alignItems: 'center',

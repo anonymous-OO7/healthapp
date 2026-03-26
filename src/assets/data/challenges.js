@@ -1,0 +1,110 @@
+// src/assets/data/challenges.js
+
+const challenges = [
+  {
+    id: 'ch_001',
+    name: '7 Day Ab Challenge',
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400',
+    description: 'Get toned abs in just 7 days',
+    durationDays: 7,
+    difficulty: 'beginner',
+    category: 'abs',
+    badge: '🏆',
+    exerciseIds: ['ex_104', 'ex_203', 'ex_204', 'ex_205', 'ex_206', 'ex_207'],
+    dailyPlan: [
+      {
+        day: 1,
+        exerciseIds: ['ex_203', 'ex_204', 'ex_104'],
+        intensity: 'light',
+      },
+      {
+        day: 2,
+        exerciseIds: ['ex_205', 'ex_206', 'ex_207'],
+        intensity: 'light',
+      },
+      {
+        day: 3,
+        exerciseIds: ['ex_203', 'ex_204', 'ex_205', 'ex_104'],
+        intensity: 'medium',
+      },
+      {
+        day: 4,
+        exerciseIds: ['ex_206', 'ex_207', 'ex_203'],
+        intensity: 'medium',
+      },
+      {
+        day: 5,
+        exerciseIds: ['ex_104', 'ex_205', 'ex_206', 'ex_207'],
+        intensity: 'medium',
+      },
+      {
+        day: 6,
+        exerciseIds: ['ex_203', 'ex_204', 'ex_205', 'ex_206'],
+        intensity: 'high',
+      },
+      {
+        day: 7,
+        exerciseIds: ['ex_104', 'ex_203', 'ex_205', 'ex_206', 'ex_207'],
+        intensity: 'high',
+      },
+    ],
+  },
+  {
+    id: 'ch_002',
+    name: '30 Day Full Body',
+    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400',
+    description: 'Transform your body in 30 days',
+    durationDays: 30,
+    difficulty: 'intermediate',
+    category: 'full_body',
+    badge: '🥇',
+    exerciseIds: [
+      'ex_101',
+      'ex_102',
+      'ex_103',
+      'ex_104',
+      'ex_105',
+      'ex_201',
+      'ex_202',
+    ],
+    dailyPlan: null, // Uses all exercises each day with progression
+  },
+  {
+    id: 'ch_003',
+    name: '14 Day Arm Toner',
+    image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c149a?w=400',
+    description: 'Sculpt your arms in 2 weeks',
+    durationDays: 14,
+    difficulty: 'beginner',
+    category: 'arm',
+    badge: '💪',
+    exerciseIds: ['ex_301', 'ex_302', 'ex_303', 'ex_304', 'ex_102'],
+    dailyPlan: null,
+  },
+  {
+    id: 'ch_004',
+    name: '21 Day Leg Builder',
+    image: 'https://images.unsplash.com/photo-1434608519344-49d77a699e1d?w=400',
+    description: 'Build strong legs in 3 weeks',
+    durationDays: 21,
+    difficulty: 'intermediate',
+    category: 'leg',
+    badge: '🦵',
+    exerciseIds: ['ex_103', 'ex_501', 'ex_502', 'ex_503', 'ex_504'],
+    dailyPlan: null,
+  },
+  {
+    id: 'ch_005',
+    name: '10 Day Fat Burner',
+    image: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400',
+    description: 'Burn fat fast with HIIT workouts',
+    durationDays: 10,
+    difficulty: 'advanced',
+    category: 'full_body',
+    badge: '🔥',
+    exerciseIds: ['ex_101', 'ex_105', 'ex_201', 'ex_202', 'ex_502'],
+    dailyPlan: null,
+  },
+];
+
+export default challenges;
