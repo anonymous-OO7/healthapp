@@ -51,7 +51,18 @@ const DetailsScreenStyle = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
   },
+  fullScreenAdBadge: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    zIndex: 9999,
+    backgroundColor: 'rgba(0, 128, 0, 0.75)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+  },
 
+  // --- Nav Bar ---
   navBarContainer: {
     height: 56,
     width: '100%',
@@ -101,6 +112,109 @@ const DetailsScreenStyle = StyleSheet.create({
     height: '100%',
   },
 
+  // --- Ad Block Badge (on video player) ---
+  adBlockBadge: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    zIndex: 100,
+    backgroundColor: 'rgba(0, 128, 0, 0.75)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  adBlockBadgeText: {
+    color: '#FFF',
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.3,
+  },
+
+  // --- Player Mode Toggle Button (on video player) ---
+  playerModeToggle: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    zIndex: 100,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  playerModeToggleText: {
+    fontSize: 14,
+  },
+
+  // --- Ad Block Settings Bar ---
+  adBlockBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: responsiveWidth(4),
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  adBlockBarLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  adBlockBarIcon: {
+    fontSize: 20,
+    marginRight: 10,
+  },
+  adBlockBarTitle: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '700',
+    fontFamily: 'Poppins-SemiBold',
+  },
+  adBlockBarSubtitle: {
+    fontSize: responsiveFontSize(1.2),
+    fontFamily: 'Poppins-Regular',
+    marginTop: 1,
+  },
+  adBlockBarRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  modeChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  modeChipText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+
+  // --- Thumbnail Ad-Free Badge ---
+  thumbnailAdFreeBadge: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    backgroundColor: 'rgba(0, 128, 0, 0.8)',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  thumbnailAdFreeText: {
+    fontSize: 10,
+  },
+
   // --- Main Content ---
   scrollContent: {
     flexGrow: 1,
@@ -110,7 +224,7 @@ const DetailsScreenStyle = StyleSheet.create({
   // Title Section
   infoSection: {
     paddingHorizontal: responsiveWidth(5),
-    paddingTop: 20,
+    paddingTop: 12,
     paddingBottom: 10,
   },
   titleRow: {
@@ -315,7 +429,7 @@ const DetailsScreenStyle = StyleSheet.create({
     fontSize: 16,
   },
 
-  // Bottom Banner (NOTE: This is unused in the new DetailsScreen.js, but kept for completeness if future use is intended)
+  // Bottom Banner
   bottomBannerContainer: {
     position: 'relative',
     left: 0,
