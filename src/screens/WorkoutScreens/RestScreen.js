@@ -1,5 +1,3 @@
-// src/screens/Training/RestScreen.js
-
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -14,26 +12,33 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Feather from 'react-native-vector-icons/Feather';
-
-const REST_DURATION = 15; // 15 seconds rest
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const RestScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { nextExercise, onContinue } = route.params || {};
 
-  const [timeLeft, setTimeLeft] = useState(REST_DURATION);
-  const [isSkipped, setIsSkipped] = useState(false);
+  const { exercises, nextIndex } = route.params;
+
+  const nextExercise = exercises[nextIndex];
+  const [timeLeft, setTimeLeft] = useState(20);
+
+  const safeVibrate = duration => {
+    try {
+      Vibration.vibrate(duration);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          if (!isSkipped) {
-            Vibration.vibrate(300);
-            handleContinue();
-          }
+          safeVibrate(300);
+          handleSkip();
           return 0;
         }
         return prev - 1;
@@ -41,22 +46,17 @@ const RestScreen = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [handleContinue, isSkipped]);
-
-  const handleContinue = () => {
-    if (onContinue) {
-      onContinue();
-    }
-    navigation.goBack();
-  };
+  }, []);
 
   const handleSkip = () => {
-    setIsSkipped(true);
-    handleContinue();
+    navigation.replace('Fit', {
+      ...route.params,
+      currentIndex: nextIndex,
+    });
   };
 
   const handleAddTime = () => {
-    setTimeLeft(prev => prev + 10);
+    setTimeLeft(prev => prev + 20);
   };
 
   const formatTime = seconds => {
@@ -67,79 +67,84 @@ const RestScreen = () => {
     return `${mins}:${secs}`;
   };
 
-  const progress = ((REST_DURATION - timeLeft) / REST_DURATION) * 100;
-
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FAFAFA" />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Rest Time</Text>
-      </View>
-
-      {/* Timer Section */}
-      <View style={styles.timerSection}>
-        <View style={styles.timerCircle}>
-          <View style={styles.timerInner}>
-            <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
-            <Text style={styles.timerLabel}>Remaining</Text>
+      <View style={styles.topHalf}>
+        <View style={styles.headerIcons}>
+          <View style={styles.headerRightIcons}>
+            <Pressable style={styles.iconButton}>
+              <Ionicons name="videocam" size={24} color="#C4C4C4" />
+            </Pressable>
+            <Pressable style={styles.iconButton}>
+              <Ionicons name="volume-high" size={24} color="#C4C4C4" />
+            </Pressable>
+            <Pressable style={styles.iconButton}>
+              <MaterialIcons name="library-music" size={24} color="#C4C4C4" />
+            </Pressable>
           </View>
-          {/* Progress Ring - simplified as background fill */}
-          <View
-            style={[
-              styles.progressRing,
-              {
-                transform: [{ rotate: `${(progress / 100) * 360}deg` }],
-              },
-            ]}
+        </View>
+
+        <View style={styles.imageWrapper}>
+          <FastImage
+            style={styles.exerciseImage}
+            source={{ uri: nextExercise.image }}
+            resizeMode={FastImage.resizeMode.contain}
           />
         </View>
 
-        {/* Time Controls */}
-        <View style={styles.timeControls}>
-          <Pressable style={styles.timeButton} onPress={handleAddTime}>
-            <Feather name="plus" size={20} color="#0066FF" />
-            <Text style={styles.timeButtonText}>+10s</Text>
+        <View style={styles.feedbackIcons}>
+          <Pressable style={styles.feedbackButton}>
+            <MaterialIcons name="thumb-down" size={24} color="#E0E0E0" />
+          </Pressable>
+          <Pressable style={styles.feedbackButton}>
+            <MaterialIcons name="thumb-up" size={24} color="#E0E0E0" />
           </Pressable>
         </View>
       </View>
 
-      {/* Next Exercise Preview */}
-      {nextExercise && (
-        <View style={styles.nextExerciseSection}>
-          <Text style={styles.nextLabel}>NEXT EXERCISE</Text>
-          <View style={styles.nextExerciseCard}>
-            <FastImage
-              source={{ uri: nextExercise.image }}
-              style={styles.nextExerciseImage}
-              resizeMode={FastImage.resizeMode.cover}
+      <View style={styles.bottomHalf}>
+        <View style={styles.nextInfoContainer}>
+          <View style={styles.nextHeaderRow}>
+            <Text style={styles.nextStepText}>
+              NEXT {nextIndex + 1}/{exercises.length}
+            </Text>
+            <Text style={styles.nextTimeText}>
+              {nextExercise.type === 'time'
+                ? `00:${nextExercise.value.toString().padStart(2, '0')}`
+                : `x ${nextExercise.value}`}
+            </Text>
+          </View>
+          <View style={styles.nextTitleRow}>
+            <Text style={styles.nextTitleText}>
+              {nextExercise.name.toUpperCase()}
+            </Text>
+            <Feather
+              name="help-circle"
+              size={16}
+              color="#FFFFFF"
+              style={styles.helpIcon}
             />
-            <View style={styles.nextExerciseInfo}>
-              <Text style={styles.nextExerciseName}>{nextExercise.name}</Text>
-              <View style={styles.nextExerciseMeta}>
-                <Feather
-                  name={nextExercise.type === 'time' ? 'clock' : 'repeat'}
-                  size={14}
-                  color="#8E8E93"
-                />
-                <Text style={styles.nextExerciseValue}>
-                  {nextExercise.type === 'time'
-                    ? `${nextExercise.value}s`
-                    : `×${nextExercise.value}`}
-                </Text>
-              </View>
-            </View>
           </View>
         </View>
-      )}
 
-      {/* Action Button */}
-      <View style={styles.actionContainer}>
-        <Pressable style={styles.skipButton} onPress={handleSkip}>
-          <Feather name="skip-forward" size={20} color="#FFFFFF" />
-          <Text style={styles.skipButtonText}>SKIP REST</Text>
-        </Pressable>
+        <View style={styles.timerContainer}>
+          <Text style={styles.restText}>REST</Text>
+          <Text style={styles.largeTimerText}>{formatTime(timeLeft)}</Text>
+          <Pressable style={styles.editRestButton}>
+            <Text style={styles.editRestText}>Edit Rest Time</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.actionRow}>
+          <Pressable style={styles.addTimeButton} onPress={handleAddTime}>
+            <Text style={styles.addTimeText}>+20s</Text>
+          </Pressable>
+          <Pressable style={styles.skipButton} onPress={handleSkip}>
+            <Text style={styles.skipText}>Skip</Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -150,133 +155,155 @@ export default RestScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FAFAFA',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#8E8E93',
-  },
-  timerSection: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  timerCircle: {
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  timerInner: {
-    alignItems: 'center',
-  },
-  timerText: {
-    fontSize: 52,
-    fontWeight: '700',
-    color: '#0066FF',
-  },
-  timerLabel: {
-    fontSize: 14,
-    color: '#8E8E93',
-    marginTop: 5,
-  },
-  progressRing: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    borderRadius: 110,
-    borderWidth: 6,
-    borderColor: '#0066FF',
-    borderLeftColor: 'transparent',
-    borderBottomColor: 'transparent',
-  },
-  timeControls: {
-    flexDirection: 'row',
-    marginTop: 30,
-  },
-  timeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E3F2FD',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
-  },
-  timeButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#0066FF',
-    marginLeft: 8,
-  },
-  nextExerciseSection: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  nextLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#8E8E93',
-    letterSpacing: 1,
-    marginBottom: 12,
-  },
-  nextExerciseCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  topHalf: {
+    flex: 1.1,
     backgroundColor: '#FAFAFA',
-    borderRadius: 16,
-    padding: 12,
-  },
-  nextExerciseImage: {
-    width: 70,
-    height: 70,
-    borderRadius: 12,
-    backgroundColor: '#EEEEEE',
-  },
-  nextExerciseInfo: {
-    flex: 1,
-    marginLeft: 15,
-  },
-  nextExerciseName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginBottom: 6,
-  },
-  nextExerciseMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  nextExerciseValue: {
-    fontSize: 14,
-    color: '#8E8E93',
-    marginLeft: 5,
-  },
-  actionContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: Platform.OS === 'ios' ? 35 : 25,
-  },
-  skipButton: {
-    backgroundColor: '#0066FF',
-    flexDirection: 'row',
-    alignItems: 'center',
+    position: 'relative',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 30,
   },
-  skipButtonText: {
+  headerIcons: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 10,
+  },
+  headerRightIcons: {
+    flexDirection: 'row',
+  },
+  iconButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  imageWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  exerciseImage: {
+    width: '90%',
+    height: '80%',
+  },
+  feedbackIcons: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    flexDirection: 'row',
+  },
+  feedbackButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  bottomHalf: {
+    flex: 1,
+    backgroundColor: '#0066FF',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 30,
+    justifyContent: 'space-between',
+  },
+  nextInfoContainer: {
+    marginBottom: 20,
+  },
+  nextHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  nextStepText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
+  },
+  nextTimeText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  nextTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nextTitleText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '800',
+  },
+  helpIcon: {
     marginLeft: 8,
+    opacity: 0.8,
+  },
+  timerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  restText: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: '800',
+    marginBottom: 10,
+  },
+  largeTimerText: {
+    color: '#FFFFFF',
+    fontSize: 72,
+    fontWeight: '800',
+    marginBottom: 20,
+  },
+  editRestButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  editRestText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+  },
+  addTimeButton: {
+    flex: 0.47,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addTimeText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  skipButton: {
+    flex: 0.47,
+    backgroundColor: '#FFFFFF',
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  skipText: {
+    color: '#0066FF',
+    fontSize: 18,
+    fontWeight: '700',
   },
 });

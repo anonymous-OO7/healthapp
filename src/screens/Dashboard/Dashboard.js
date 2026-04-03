@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Screens
-import HomeScreen from '../HomeScreen/HomeScreen';
+import RecipieScreen from '../RecipieScreen/RecipieScreen';
 import Comingsoon from '../../components/molecules/Comingsoon';
 import WorkoutHomeScreen from '../WorkoutScreens/WorkoutHomeScreen';
 // Icons
@@ -50,26 +50,25 @@ const DashBoard = props => {
     >
       <Tab.Screen
         name="Home"
-        children={() => <HomeScreen {...props} />}
+        children={() => <WorkoutHomeScreen {...props} />}
         options={{
           tabBarIcon: ({ focused }) => renderIcon(HomeIcon, focused, 'Home'),
         }}
       />
 
       <Tab.Screen
+        name="Cook"
+        children={() => <RecipieScreen {...props} />}
+        options={{
+          tabBarIcon: ({ focused }) =>
+            renderIcon(WorkoutIconSvg, focused, 'Cook'),
+        }}
+      />
+      <Tab.Screen
         name="CartScreen"
         children={() => <CartScreen {...props} />}
         options={{
           tabBarIcon: ({ focused }) => renderIcon(CartIcon, focused, 'Shop'),
-        }}
-      />
-
-      <Tab.Screen
-        name="WorkoutHome"
-        children={() => <WorkoutHomeScreen {...props} />}
-        options={{
-          tabBarIcon: ({ focused }) =>
-            renderIcon(WorkoutIconSvg, focused, 'Workout'),
         }}
       />
 

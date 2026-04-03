@@ -4,7 +4,6 @@ import {
   View,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   Pressable,
   Platform,
   StatusBar,
@@ -24,6 +23,8 @@ import {
   calculateTotalCalories,
   getDifficultyColor,
 } from '../../utils/exerciseHelper';
+import HealthConnectCard from '../../components/molecules/HealthConnect/HealthConnectCard';
+import styles from './WorkoutHomeScreen.styles';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -193,10 +194,9 @@ const WorkoutHomeScreen = () => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={[4]}
+        stickyHeaderIndices={[5]}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Child 0: Top Bar */}
         <View style={styles.topBar}>
           <View style={styles.topBarLeft}>
             <Text style={styles.greetingText}>{getGreeting()} 👋</Text>
@@ -215,7 +215,8 @@ const WorkoutHomeScreen = () => {
           </View>
         </View>
 
-        {/* Child 1: Stats Row */}
+        <HealthConnectCard />
+
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
             <View style={[styles.statIcon, { backgroundColor: '#FFF3E0' }]}>
@@ -250,7 +251,6 @@ const WorkoutHomeScreen = () => {
           </View>
         </View>
 
-        {/* Child 2: Weekly Goal Card */}
         <View style={styles.weeklyGoalCard}>
           <View style={styles.goalHeader}>
             <View>
@@ -300,7 +300,6 @@ const WorkoutHomeScreen = () => {
           </View>
         </View>
 
-        {/* Child 3: Challenges Section */}
         <View>
           <View style={styles.sectionHeaderWithAction}>
             <Text style={styles.sectionTitle}>🔥 Challenges</Text>
@@ -318,7 +317,6 @@ const WorkoutHomeScreen = () => {
           </ScrollView>
         </View>
 
-        {/* Child 4: Body Focus Sticky Section */}
         <View style={styles.stickyChipSection}>
           <View style={styles.sectionHeaderWithAction}>
             <Text style={styles.sectionTitle}>💪 Body Focus</Text>
@@ -374,7 +372,6 @@ const WorkoutHomeScreen = () => {
           </View>
         </View>
 
-        {/* Child 5: Workout Cards */}
         <View style={styles.workoutsContainer}>
           {filteredBodyTypes.map(item => (
             <Pressable
@@ -448,443 +445,3 @@ const WorkoutHomeScreen = () => {
 };
 
 export default WorkoutHomeScreen;
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#FAFAFA',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
-  scrollContent: {
-    paddingBottom: 20,
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
-    backgroundColor: '#FAFAFA',
-  },
-  topBarLeft: {
-    flex: 1,
-  },
-  topBarRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  greetingText: {
-    fontSize: 14,
-    color: '#8E8E93',
-    fontWeight: '400',
-    marginBottom: 2,
-  },
-  mainTitle: {
-    fontSize: 22,
-    color: '#1A1A1A',
-    fontWeight: '700',
-  },
-  headerIconBtn: {
-    backgroundColor: '#FFFFFF',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#EFEFEF',
-    marginRight: 10,
-  },
-  profileImage: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    marginHorizontal: 20,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  statItem: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  statIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-  },
-  statIconText: {
-    fontSize: 16,
-  },
-  statValue: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  statLabel: {
-    fontSize: 11,
-    color: '#8E8E93',
-    marginTop: 1,
-  },
-  statDivider: {
-    width: 1,
-    height: 30,
-    backgroundColor: '#EFEFEF',
-    marginHorizontal: 10,
-  },
-  weeklyGoalCard: {
-    marginHorizontal: 20,
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
-    marginBottom: 5,
-  },
-  goalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
-  },
-  goalLabel: {
-    fontSize: 14,
-    color: '#8E8E93',
-    marginBottom: 4,
-  },
-  goalProgress: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  editBtn: {
-    padding: 8,
-    backgroundColor: 'rgba(0, 102, 255, 0.1)',
-    borderRadius: 8,
-  },
-  progressBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  progressBar: {
-    flex: 1,
-    height: 8,
-    backgroundColor: '#F0F0F0',
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginRight: 10,
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#0066FF',
-    borderRadius: 4,
-  },
-  progressPercent: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#0066FF',
-    width: 35,
-  },
-  daySelector: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  dayItem: {
-    alignItems: 'center',
-  },
-  dayText: {
-    fontSize: 12,
-    color: '#8E8E93',
-    marginBottom: 8,
-    fontWeight: '500',
-  },
-  dayNum: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-  },
-  dayNumSelected: {
-    backgroundColor: '#0066FF',
-  },
-  dayNumPast: {
-    backgroundColor: '#E8F5E9',
-  },
-  dayNumText: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    fontWeight: '600',
-  },
-  dayNumTextSelected: {
-    color: '#FFFFFF',
-  },
-  sectionHeaderWithAction: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  seeAllText: {
-    fontSize: 14,
-    color: '#0066FF',
-    fontWeight: '600',
-  },
-  stickyChipSection: {
-    backgroundColor: '#FAFAFA',
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
-  },
-  chipRow: {
-    height: 50,
-  },
-  chipContainer: {
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    height: 45,
-  },
-  chipItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 25,
-    backgroundColor: '#FFFFFF',
-    marginRight: 10,
-    borderWidth: 1,
-    borderColor: '#EFEFEF',
-  },
-  chipItemSelected: {
-    backgroundColor: '#0066FF',
-    borderColor: '#0066FF',
-  },
-  chipIcon: {
-    fontSize: 14,
-    marginRight: 6,
-  },
-  chipLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#8E8E93',
-  },
-  chipLabelSelected: {
-    color: '#FFFFFF',
-  },
-  challengeList: {
-    paddingHorizontal: 20,
-    paddingBottom: 5,
-  },
-  challengeCard: {
-    width: SCREEN_WIDTH * 0.75,
-    height: 200,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    marginRight: 15,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  challengeImage: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-  },
-  challengeOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  challengeBadge: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: 'rgba(0, 102, 255, 0.9)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  challengeBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  progressBadge: {
-    position: 'absolute',
-    top: 12,
-    left: 12,
-    backgroundColor: 'rgba(76, 175, 80, 0.9)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  progressBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  challengeContent: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 14,
-  },
-  challengeTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 4,
-  },
-  challengeSubtitle: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.8)',
-    marginBottom: 10,
-  },
-  challengeProgressBar: {
-    height: 4,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    borderRadius: 2,
-    marginBottom: 10,
-    overflow: 'hidden',
-  },
-  challengeProgressFill: {
-    height: '100%',
-    backgroundColor: '#4CAF50',
-    borderRadius: 2,
-  },
-  challengeMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  challengeMetaText: {
-    fontSize: 11,
-    color: '#FFFFFF',
-    marginLeft: 4,
-  },
-  difficultyBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  difficultyText: {
-    fontSize: 10,
-    color: '#FFFFFF',
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  workoutsContainer: {
-    paddingTop: 5,
-  },
-  workoutCard: {
-    marginHorizontal: 20,
-    marginBottom: 15,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  workoutImage: {
-    width: '100%',
-    height: 140,
-  },
-  workoutContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 14,
-  },
-  workoutInfo: {
-    flex: 1,
-  },
-  workoutTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  workoutIcon: {
-    fontSize: 16,
-    marginRight: 6,
-  },
-  workoutTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  workoutSubtitle: {
-    fontSize: 13,
-    color: '#8E8E93',
-    marginBottom: 10,
-  },
-  workoutMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  workoutMetaText: {
-    fontSize: 12,
-    color: '#8E8E93',
-    marginLeft: 5,
-  },
-  metaDivider: {
-    width: 1,
-    height: 12,
-    backgroundColor: '#EFEFEF',
-    marginHorizontal: 10,
-  },
-  workoutDifficultyBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  workoutDifficultyText: {
-    fontSize: 11,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  workoutAction: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(0, 102, 255, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

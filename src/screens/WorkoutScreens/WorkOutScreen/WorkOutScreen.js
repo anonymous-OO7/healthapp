@@ -1,5 +1,3 @@
-// src/screens/Training/WorkOutScreen.js
-
 import React, { useContext } from 'react';
 import {
   StyleSheet,
@@ -43,18 +41,15 @@ const WorkOutScreen = () => {
     badge,
   } = route.params;
 
-  // Get challenge progress if this is a challenge
   const challengeProgress = isChallenge ? getChallengeProgress(id) : null;
   const currentDay = challengeProgress?.currentDay || 1;
   const completedDays = challengeProgress?.completedDays || [];
 
   const handleStartWorkout = async () => {
-    // Start challenge if not started
     if (isChallenge && !challengeProgress) {
       await startChallenge(id);
     }
 
-    // Reset session and navigate
     resetSession();
     navigation.navigate('Fit', {
       exercises: exercises,
@@ -63,6 +58,7 @@ const WorkOutScreen = () => {
       isChallenge: isChallenge,
       durationDays: durationDays,
       currentDay: currentDay,
+      currentIndex: 0,
     });
   };
 
@@ -75,12 +71,10 @@ const WorkOutScreen = () => {
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header Image */}
         <View style={styles.headerContainer}>
           <Image style={styles.headerImage} source={{ uri: image }} />
           <View style={styles.headerOverlay} />
 
-          {/* Back Button */}
           <Pressable
             style={styles.backButton}
             onPress={() => navigation.goBack()}
@@ -88,7 +82,6 @@ const WorkOutScreen = () => {
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </Pressable>
 
-          {/* Header Content */}
           <View style={styles.headerContent}>
             {isChallenge && (
               <View style={styles.challengeTag}>
@@ -101,7 +94,6 @@ const WorkOutScreen = () => {
             <Text style={styles.headerTitle}>{name}</Text>
             <Text style={styles.headerDescription}>{description}</Text>
 
-            {/* Difficulty Badge */}
             <View
               style={[
                 styles.difficultyBadge,
@@ -113,7 +105,6 @@ const WorkOutScreen = () => {
           </View>
         </View>
 
-        {/* Stats Cards */}
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
             <View
@@ -150,7 +141,6 @@ const WorkOutScreen = () => {
           </View>
         </View>
 
-        {/* Challenge Progress (if challenge) */}
         {isChallenge && (
           <View style={styles.challengeProgressSection}>
             <Text style={styles.progressSectionTitle}>Challenge Progress</Text>
@@ -193,7 +183,6 @@ const WorkOutScreen = () => {
           </View>
         )}
 
-        {/* Exercise List */}
         <View style={styles.exerciseSection}>
           <Text style={styles.sectionTitle}>
             {isChallenge ? `Day ${currentDay} Exercises` : 'Exercises'}
@@ -243,11 +232,9 @@ const WorkOutScreen = () => {
           })}
         </View>
 
-        {/* Bottom Padding */}
         <View style={{ height: 120 }} />
       </ScrollView>
 
-      {/* Bottom Action Bar */}
       <View style={styles.bottomBar}>
         <Pressable style={styles.startButton} onPress={handleStartWorkout}>
           <Feather name="play" size={20} color="#FFFFFF" />

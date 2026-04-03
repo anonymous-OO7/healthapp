@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/core';
 import { useTranslation } from 'react-i18next';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 
-import HomeScreenStyle from './HomeScreenStyle';
+import HomeScreenStyle from './RecipieScreenStyle';
 import { Colors } from '../../assets/colors';
 import recipes from '../../assets/data/data';
 import categories from '../../assets/data/categories';
@@ -32,7 +32,7 @@ import {
   BannerAdComponent,
   AdLoadingOverlay,
 } from '../../components/molecules/ads';
-import { useInterstitialAd } from '../../../src/common/hooks/useInterstitialAd';
+import { useInterstitialAd } from '../../common/hooks/useInterstitialAd';
 
 import Chip from '../../components/ui/Chip';
 
@@ -79,7 +79,7 @@ const getRowBasedList = list => {
   return result;
 };
 
-const HomeScreen = props => {
+const RecipieScreen = props => {
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language;
@@ -377,4 +377,4 @@ const HomeScreen = props => {
   );
 };
 
-export default HomeScreen;
+export default RecipieScreen;

@@ -1,5 +1,3 @@
-// src/screens/Training/FitScreen.js
-
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
@@ -14,9 +12,10 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { FitnessItems } from '../../context/Context';
-import { formatExerciseValue } from '../../utils/exerciseHelper';
 
 const FitScreen = () => {
   const route = useRoute();
@@ -29,13 +28,10 @@ const FitScreen = () => {
     isChallenge,
     durationDays,
     currentDay,
+    currentIndex,
   } = route.params;
 
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(null);
-
-  const current = exercises[index];
+  const current = exercises[currentIndex];
 
   const {
     completed,
@@ -44,74 +40,76 @@ const FitScreen = () => {
     setSessionMinutes,
     sessionCalories,
     setSessionCalories,
-    completeWorkout,
-    completeChallengeDay,
   } = useContext(FitnessItems);
 
-  // Timer for time-based exercises
-  useEffect(() => {
-    if (current.type === 'time' && timeRemaining === null) {
-      setTimeRemaining(current.value);
+  const [isReady, setIsReady] = useState(currentIndex === 0);
+  const [readyTime, setReadyTime] = useState(15);
+  const [isPaused, setIsPaused] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(
+    current.type === 'time' ? current.value : 0,
+  );
+
+  const safeVibrate = duration => {
+    try {
+      Vibration.vibrate(duration);
+    } catch (e) {
+      console.log(e);
     }
-  }, [current, timeRemaining]);
+  };
+
+  useEffect(() => {
+    let readyInterval;
+    if (isReady && readyTime > 0) {
+      readyInterval = setInterval(() => {
+        setReadyTime(prev => prev - 1);
+      }, 1000);
+    } else if (isReady && readyTime === 0) {
+      setIsReady(false);
+      safeVibrate(400);
+    }
+    return () => clearInterval(readyInterval);
+  }, [isReady, readyTime]);
 
   useEffect(() => {
     let interval;
-    if (current.type === 'time' && timeRemaining > 0 && !isPaused) {
+    if (!isReady && current.type === 'time' && timeRemaining > 0 && !isPaused) {
       interval = setInterval(() => {
         setTimeRemaining(prev => prev - 1);
       }, 1000);
-    } else if (timeRemaining === 0) {
-      // Auto complete when timer reaches 0
-      Vibration.vibrate(500);
+    } else if (!isReady && current.type === 'time' && timeRemaining === 0) {
+      safeVibrate(500);
       handleDone();
     }
-
     return () => clearInterval(interval);
-  }, [timeRemaining, isPaused, current.type, handleDone]);
+  }, [isReady, timeRemaining, isPaused, current.type]);
 
   const handleDone = useCallback(async () => {
-    // Add to completed
-    setCompleted([...completed, current.name]);
+    if (!completed.includes(current.name)) {
+      setCompleted([...completed, current.name]);
+    }
 
-    // Update session stats
     const exerciseTime = current.type === 'time' ? current.value / 60 : 0.5;
     setSessionMinutes(sessionMinutes + exerciseTime);
     setSessionCalories(sessionCalories + (current.calories || 6));
 
-    // Check if workout is complete
-    if (index + 1 >= exercises.length) {
-      // Workout complete
-      const workoutData = {
-        name: workoutName,
-        bodyType: workoutId,
-        duration: Math.ceil(sessionMinutes + exerciseTime),
-        calories: Math.ceil(sessionCalories + (current.calories || 6)),
-        exerciseCount: exercises.length,
-        exercises: [...completed, current.name],
-      };
-
-      await completeWorkout(workoutData);
-
-      // Complete challenge day if applicable
-      if (isChallenge) {
-        await completeChallengeDay(workoutId, currentDay, durationDays);
-      }
-
-      navigation.navigate('WorkoutHome');
+    if (currentIndex + 1 >= exercises.length) {
+      navigation.replace('WorkoutComplete', {
+        workoutId,
+        workoutName,
+        isChallenge,
+        durationDays,
+        currentDay,
+      });
     } else {
-      // Reset timer for next exercise
-      setTimeRemaining(null);
-      // Go to rest screen
-      navigation.navigate('Rest', {
-        nextExercise: exercises[index + 1],
-        onContinue: () => setIndex(index + 1),
+      navigation.replace('Rest', {
+        ...route.params,
+        nextIndex: currentIndex + 1,
       });
     }
   }, [
     completed,
     current,
-    index,
+    currentIndex,
     exercises,
     sessionMinutes,
     sessionCalories,
@@ -124,145 +122,160 @@ const FitScreen = () => {
     setCompleted,
     setSessionMinutes,
     setSessionCalories,
-    completeWorkout,
-    completeChallengeDay,
+    route.params,
   ]);
 
   const goToPrevious = () => {
-    if (index > 0) {
-      setTimeRemaining(null);
-      navigation.navigate('Rest', {
-        nextExercise: exercises[index - 1],
-        onContinue: () => setIndex(index - 1),
+    if (currentIndex > 0) {
+      navigation.replace('Fit', {
+        ...route.params,
+        currentIndex: currentIndex - 1,
       });
     }
   };
 
   const goToNext = () => {
-    if (index + 1 >= exercises.length) {
-      navigation.navigate('WorkoutHome');
-    } else {
-      setTimeRemaining(null);
-      navigation.navigate('Rest', {
-        nextExercise: exercises[index + 1],
-        onContinue: () => setIndex(index + 1),
-      });
-    }
+    handleDone();
   };
 
-  const displayValue = () => {
-    if (current.type === 'time' && timeRemaining !== null) {
-      const mins = Math.floor(timeRemaining / 60)
-        .toString()
-        .padStart(2, '0');
-      const secs = (timeRemaining % 60).toString().padStart(2, '0');
-      return `${mins}:${secs}`;
-    }
-    return formatExerciseValue(current.type, current.value);
+  const formatTime = seconds => {
+    const mins = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
   };
-
-  const progress = ((index + 1) / exercises.length) * 100;
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FAFAFA" />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <Pressable
-          style={styles.closeButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Feather name="x" size={24} color="#1A1A1A" />
-        </Pressable>
-
-        {/* Progress */}
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${progress}%` }]} />
+      <View style={styles.topSection}>
+        <View style={styles.headerIcons}>
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={styles.iconButton}
+          >
+            <Ionicons name="arrow-back" size={28} color="#C4C4C4" />
+          </Pressable>
+          <View style={styles.headerRightIcons}>
+            <Pressable style={styles.iconButton}>
+              <Ionicons name="videocam" size={24} color="#C4C4C4" />
+            </Pressable>
+            <Pressable style={styles.iconButton}>
+              <Ionicons name="volume-high" size={24} color="#C4C4C4" />
+            </Pressable>
+            <Pressable style={styles.iconButton}>
+              <MaterialIcons name="library-music" size={24} color="#C4C4C4" />
+            </Pressable>
           </View>
-          <Text style={styles.progressText}>
-            {index + 1} / {exercises.length}
-          </Text>
         </View>
 
-        <Pressable
-          style={styles.pauseButton}
-          onPress={() => setIsPaused(!isPaused)}
-        >
-          <Feather
-            name={isPaused ? 'play' : 'pause'}
-            size={20}
-            color="#1A1A1A"
+        <View style={styles.imageWrapper}>
+          <FastImage
+            style={styles.exerciseImage}
+            source={{ uri: current.image, priority: FastImage.priority.high }}
+            resizeMode={FastImage.resizeMode.contain}
           />
-        </Pressable>
-      </View>
+        </View>
 
-      {/* Exercise Image */}
-      <View style={styles.imageContainer}>
-        <FastImage
-          style={styles.exerciseImage}
-          source={{ uri: current.image, priority: FastImage.priority.high }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-
-        {isPaused && (
-          <View style={styles.pausedOverlay}>
-            <Text style={styles.pausedText}>PAUSED</Text>
-          </View>
-        )}
-      </View>
-
-      {/* Exercise Info */}
-      <View style={styles.infoContainer}>
-        <Text style={styles.exerciseName}>{current.name}</Text>
-
-        <View style={styles.valueContainer}>
+        <View style={styles.feedbackIcons}>
+          <Pressable style={styles.feedbackButton}>
+            <MaterialIcons name="thumb-down" size={24} color="#E0E0E0" />
+          </Pressable>
+          <Pressable style={styles.feedbackButton}>
+            <MaterialIcons name="thumb-up" size={24} color="#E0E0E0" />
+          </Pressable>
+        </View>
+        <View style={styles.progressBarContainer}>
           <View
             style={[
-              styles.valueIcon,
-              {
-                backgroundColor:
-                  current.type === 'time' ? '#E3F2FD' : '#E8F5E9',
-              },
+              styles.progressBar,
+              { width: `${(currentIndex / exercises.length) * 100}%` },
             ]}
-          >
-            <Feather
-              name={current.type === 'time' ? 'clock' : 'repeat'}
-              size={24}
-              color={current.type === 'time' ? '#0066FF' : '#4CAF50'}
-            />
-          </View>
-          <Text style={styles.exerciseValue}>{displayValue()}</Text>
+          />
         </View>
-
-        {current.description && (
-          <Text style={styles.exerciseDescription}>{current.description}</Text>
-        )}
       </View>
 
-      {/* Action Buttons */}
-      <View style={styles.actionContainer}>
-        <Pressable style={styles.doneButton} onPress={handleDone}>
-          <Feather name="check" size={24} color="#FFFFFF" />
-          <Text style={styles.doneButtonText}>DONE</Text>
-        </Pressable>
+      <View style={styles.bottomSection}>
+        {isReady ? (
+          <View style={styles.readyContainer}>
+            <Text style={styles.readyTitle}>READY TO GO!</Text>
+            <View style={styles.exerciseTitleRow}>
+              <Text style={styles.exerciseNameText}>
+                {current.name.toUpperCase()}
+              </Text>
+              <Feather name="help-circle" size={18} color="#8E8E93" />
+            </View>
 
-        <View style={styles.navContainer}>
-          <Pressable
-            disabled={index === 0}
-            onPress={goToPrevious}
-            style={[styles.navButton, index === 0 && styles.navButtonDisabled]}
-          >
-            <Feather name="chevron-left" size={20} color="#1A1A1A" />
-            <Text style={styles.navButtonText}>PREV</Text>
-          </Pressable>
+            <View style={styles.readyTimerContainer}>
+              <View style={styles.readyCircle}>
+                <Text style={styles.readyTimerText}>{readyTime}</Text>
+              </View>
+              <Pressable
+                style={styles.skipReadyButton}
+                onPress={() => setIsReady(false)}
+              >
+                <Feather name="chevron-right" size={28} color="#1A1A1A" />
+              </Pressable>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.activeContainer}>
+            <View style={styles.activeTitleContainer}>
+              <Text style={styles.activeExerciseName}>
+                {current.name.toUpperCase()}
+              </Text>
+              <Feather
+                name="help-circle"
+                size={18}
+                color="#8E8E93"
+                style={styles.helpIcon}
+              />
+            </View>
 
-          <Pressable onPress={goToNext} style={styles.navButton}>
-            <Text style={styles.navButtonText}>SKIP</Text>
-            <Feather name="chevron-right" size={20} color="#1A1A1A" />
-          </Pressable>
-        </View>
+            <Text style={styles.mainTimerText}>
+              {current.type === 'time'
+                ? formatTime(timeRemaining)
+                : `x ${current.value}`}
+            </Text>
+
+            <View style={styles.controlsRow}>
+              <Pressable
+                onPress={goToPrevious}
+                style={styles.navButton}
+                disabled={currentIndex === 0}
+              >
+                <Ionicons
+                  name="play-skip-back"
+                  size={24}
+                  color={currentIndex === 0 ? '#E0E0E0' : '#8E8E93'}
+                />
+              </Pressable>
+
+              {current.type === 'time' ? (
+                <Pressable
+                  style={styles.playPausePill}
+                  onPress={() => setIsPaused(!isPaused)}
+                >
+                  <Ionicons
+                    name={isPaused ? 'play' : 'pause'}
+                    size={32}
+                    color="#FFFFFF"
+                  />
+                </Pressable>
+              ) : (
+                <Pressable style={styles.donePill} onPress={handleDone}>
+                  <Text style={styles.donePillText}>DONE</Text>
+                </Pressable>
+              )}
+
+              <Pressable onPress={goToNext} style={styles.navButton}>
+                <Ionicons name="play-skip-forward" size={24} color="#1A1A1A" />
+              </Pressable>
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -273,167 +286,209 @@ export default FitScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FAFAFA',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  closeButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  progressContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 15,
-  },
-  progressBar: {
-    flex: 1,
-    height: 6,
-    backgroundColor: '#F0F0F0',
-    borderRadius: 3,
-    marginRight: 12,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#0066FF',
-    borderRadius: 3,
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#8E8E93',
-    width: 45,
-  },
-  pauseButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    position: 'relative',
-  },
-  exerciseImage: {
-    width: '100%',
-    height: 280,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-  },
-  pausedOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 20,
-  },
-  pausedText: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  infoContainer: {
-    alignItems: 'center',
-    paddingVertical: 25,
-    paddingHorizontal: 20,
-  },
-  exerciseName: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
-    marginBottom: 15,
-  },
-  valueContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  topSection: {
+    flex: 1.2,
     backgroundColor: '#FAFAFA',
-    paddingHorizontal: 25,
-    paddingVertical: 12,
-    borderRadius: 30,
+    position: 'relative',
+    justifyContent: 'center',
   },
-  valueIcon: {
+  headerIcons: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    zIndex: 10,
+  },
+  headerRightIcons: {
+    flexDirection: 'row',
+  },
+  iconButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
+    backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginLeft: 10,
   },
-  exerciseValue: {
-    fontSize: 32,
+  imageWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  exerciseImage: {
+    width: '90%',
+    height: '80%',
+  },
+  feedbackIcons: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    flexDirection: 'row',
+  },
+  feedbackButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  progressBarContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 4,
+    backgroundColor: '#E0E0E0',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#0066FF',
+  },
+  bottomSection: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+  },
+  readyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 20,
+  },
+  readyTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#0066FF',
+    marginBottom: 15,
+  },
+  exerciseTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  exerciseNameText: {
+    fontSize: 18,
     fontWeight: '700',
     color: '#1A1A1A',
+    marginRight: 8,
   },
-  exerciseDescription: {
-    fontSize: 14,
-    color: '#8E8E93',
-    textAlign: 'center',
-    marginTop: 15,
-    lineHeight: 20,
-  },
-  actionContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: Platform.OS === 'ios' ? 35 : 25,
-  },
-  doneButton: {
-    backgroundColor: '#0066FF',
+  readyTimerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 30,
-    marginBottom: 15,
+  },
+  readyCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 6,
+    borderColor: '#F0F0F0',
+    borderLeftColor: '#0066FF',
+    borderTopColor: '#0066FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  readyTimerText: {
+    fontSize: 48,
+    fontWeight: '800',
+    color: '#1A1A1A',
+  },
+  skipReadyButton: {
+    position: 'absolute',
+    right: -60,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activeContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
+  activeTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginBottom: 30,
+  },
+  activeExerciseName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  helpIcon: {
+    marginLeft: 8,
+  },
+  mainTimerText: {
+    fontSize: 72,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    marginBottom: 40,
+  },
+  controlsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  navButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playPausePill: {
+    width: 120,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#0066FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
     shadowColor: '#0066FF',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 5,
   },
-  doneButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '700',
-    marginLeft: 8,
-  },
-  navContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  navButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  donePill: {
+    width: 120,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#0066FF',
     justifyContent: 'center',
-    backgroundColor: '#F5F5F5',
-    paddingVertical: 14,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    flex: 0.48,
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#0066FF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
-  navButtonDisabled: {
-    opacity: 0.4,
-  },
-  navButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginHorizontal: 5,
+  donePillText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '800',
   },
 });
