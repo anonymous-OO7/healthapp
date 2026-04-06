@@ -13,7 +13,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import { Colors } from '../../assets/colors';
+import { Colors } from '../../../assets/colors';
 
 const Button = ({
   disabled = true,

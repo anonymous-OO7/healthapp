@@ -20,6 +20,22 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     backgroundColor: '#FAFAFA',
   },
+  topBarLeftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  drawerIconBtn: {
+    backgroundColor: '#FFFFFF',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    marginRight: 12,
+  },
   topBarLeft: {
     flex: 1,
   },

@@ -28,7 +28,7 @@ import styles from './WorkoutHomeScreen.styles';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const WorkoutHomeScreen = () => {
+const WorkoutHomeScreen = props => {
   const navigation = useNavigation();
   const {
     weeklyGoal,
@@ -188,6 +188,14 @@ const WorkoutHomeScreen = () => {
     );
   };
 
+  const openDrawer = () => {
+    if (props?.props?.navigation?.openDrawer) {
+      props.props.navigation.openDrawer();
+    } else if (props?.navigation?.openDrawer) {
+      props.navigation.openDrawer();
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#FAFAFA" />
@@ -198,20 +206,25 @@ const WorkoutHomeScreen = () => {
         contentContainerStyle={styles.scrollContent}
       >
         <View style={styles.topBar}>
-          <View style={styles.topBarLeft}>
-            <Text style={styles.greetingText}>{getGreeting()} 👋</Text>
-            <Text style={styles.mainTitle}>Home Workout</Text>
+          <View style={styles.topBarLeftContainer}>
+            <Pressable style={styles.drawerIconBtn} onPress={openDrawer}>
+              <Feather name="menu" size={22} color="#1A1A1A" />
+            </Pressable>
+            <View style={styles.topBarLeft}>
+              <Text style={styles.greetingText}>{getGreeting()}</Text>
+              <Text style={styles.mainTitle}>Home Workout</Text>
+            </View>
           </View>
           <View style={styles.topBarRight}>
-            <Pressable style={styles.headerIconBtn}>
+            <Pressable style={styles.headerIconBtn} onPress={openDrawer}>
               <Feather name="bell" size={20} color="#1A1A1A" />
             </Pressable>
-            <Image
+            {/* <Image
               source={{
                 uri: 'https://static.vecteezy.com/system/resources/previews/019/900/322/non_2x/happy-young-cute-illustration-face-profile-png.png',
               }}
               style={styles.profileImage}
-            />
+            /> */}
           </View>
         </View>
 
@@ -319,7 +332,7 @@ const WorkoutHomeScreen = () => {
 
         <View style={styles.stickyChipSection}>
           <View style={styles.sectionHeaderWithAction}>
-            <Text style={styles.sectionTitle}>💪 Body Focus</Text>
+            <Text style={styles.sectionTitle}>Body Focus</Text>
             <Pressable>
               <Text style={styles.seeAllText}>See All</Text>
             </Pressable>

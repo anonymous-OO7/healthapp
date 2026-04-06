@@ -17,6 +17,7 @@ import FitScreen from '../screens/WorkoutScreens/FitScreen.js';
 import RestScreen from '../screens/WorkoutScreens/RestScreen.js';
 import HealthHistoryScreen from '../../src/screens/HealthHistory/HealthHistoryScreen.js';
 import WorkoutCompleteScreen from '../../src/screens/WorkoutScreens/WorkoutCompleteScreen.js';
+import DrawerPage from '../screens/DrawerPage/DrawerPage.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const AuthStack = () => {
       screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
     >
       <Stack.Screen name="Landing" component={LandingScreen} />
+      <Stack.Screen name="DrawerPage" component={DrawerPage} />
       <Stack.Screen name="DashBoard" component={DashBoard} />
       <Stack.Screen name="HomeScreen" component={RecipieScreen} />
       <Stack.Screen name="RecipieList" component={RecipieList} />

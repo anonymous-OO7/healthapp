@@ -4,7 +4,7 @@ const bodyTypes = [
   {
     id: 'bt_abs',
     name: 'Abs',
-    icon: '🔥',
+    icon: '',
     image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400',
     description: 'Build strong core and six pack abs',
     difficulty: 'beginner',
@@ -13,7 +13,7 @@ const bodyTypes = [
   {
     id: 'bt_arm',
     name: 'Arm',
-    icon: '💪',
+    icon: '',
     image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c149a?w=400',
     description: 'Tone and strengthen your arms',
     difficulty: 'beginner',
@@ -22,7 +22,7 @@ const bodyTypes = [
   {
     id: 'bt_chest',
     name: 'Chest',
-    icon: '🏋️',
+    icon: '',
     image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
     description: 'Build a powerful chest',
     difficulty: 'intermediate',
@@ -31,7 +31,7 @@ const bodyTypes = [
   {
     id: 'bt_leg',
     name: 'Leg',
-    icon: '🦵',
+    icon: '',
     image: 'https://images.unsplash.com/photo-1434608519344-49d77a699e1d?w=400',
     description: 'Strong and toned legs',
     difficulty: 'beginner',
@@ -40,7 +40,7 @@ const bodyTypes = [
   {
     id: 'bt_full',
     name: 'Full Body',
-    icon: '⚡',
+    icon: '',
     image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400',
     description: 'Complete full body workout',
     difficulty: 'intermediate',

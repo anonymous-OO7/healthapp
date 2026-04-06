@@ -34,16 +34,14 @@ const HomeScreenStyle = StyleSheet.create({
     backgroundColor: Theme.background,
   },
 
-  fixedHeaderContainer: {
-    backgroundColor: Theme.background,
-    zIndex: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.03)',
+  scrollContent: {
+    paddingBottom: 20,
   },
 
   headerWrapper: {
     paddingHorizontal: responsiveWidth(4),
     paddingTop: 10,
+    backgroundColor: Theme.background,
   },
 
   topBar: {
@@ -122,6 +120,12 @@ const HomeScreenStyle = StyleSheet.create({
     elevation: 5,
   },
 
+  stickyCategorySection: {
+    backgroundColor: Theme.background,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
+  },
   categorySection: {
     marginBottom: 5,
   },
@@ -131,6 +135,7 @@ const HomeScreenStyle = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     paddingHorizontal: responsiveWidth(4),
+    marginTop: 10,
   },
   sectionTitle: {
     fontSize: responsiveFontSize(2),
@@ -144,9 +149,14 @@ const HomeScreenStyle = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontWeight: '600',
   },
+  categoryChipRow: {
+    height: 50,
+  },
   categoryListContainer: {
     paddingHorizontal: responsiveWidth(4),
     paddingBottom: 10,
+    alignItems: 'center',
+    height: 45,
   },
   categoryPill: {
     flexDirection: 'row',
@@ -188,6 +198,11 @@ const HomeScreenStyle = StyleSheet.create({
     color: Theme.white,
   },
 
+  recipesContainer: {
+    paddingTop: 10,
+    paddingHorizontal: responsiveWidth(4),
+  },
+
   recipeListContainer: {
     flex: 1,
     paddingHorizontal: ITEM_MARGIN,
@@ -212,8 +227,6 @@ const HomeScreenStyle = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-
-  //card styles
 
   cardContainer: {
     width: (width - responsiveWidth(8) - 15) / 2,
@@ -294,7 +307,6 @@ const HomeScreenStyle = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // --- Empty State ---
   emptyContainer: {
     flex: 1,
     alignItems: 'center',
@@ -317,14 +329,12 @@ const HomeScreenStyle = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // --- Common Modal Styles ---
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center', // Center for small popups
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  // Language Modal (Bottom Sheet style)
   modalContentBottom: {
     width: '100%',
     backgroundColor: Theme.white,
@@ -335,7 +345,6 @@ const HomeScreenStyle = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
   },
-  // Diet Picker Modal (Center Popup style)
   modalContentCenter: {
     width: '80%',
     backgroundColor: Theme.white,
@@ -458,6 +467,22 @@ const HomeScreenStyle = StyleSheet.create({
   },
   inFeedAd: {
     paddingVertical: 12,
+  },
+  topBarLeftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  drawerIconBtn: {
+    backgroundColor: '#FFFFFF',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    marginRight: 12,
   },
 });
 

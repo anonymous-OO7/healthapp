@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  FlatList,
   StatusBar,
   Modal,
   Platform,
   Dimensions,
+  Pressable,
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/core';
@@ -22,6 +22,7 @@ import { Colors } from '../../assets/colors';
 import recipes from '../../assets/data/data';
 import categories from '../../assets/data/categories';
 import { TestIds } from 'react-native-google-mobile-ads';
+import Feather from 'react-native-vector-icons/Feather';
 
 import SearchClick from '../../components/molecules/SearchClick';
 import DietPickerModal from '../../components/molecules/DietPickerModal';
@@ -36,48 +37,12 @@ import { useInterstitialAd } from '../../common/hooks/useInterstitialAd';
 
 import Chip from '../../components/ui/Chip';
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ITEMS_PER_ROW = 2;
 const ROWS_PER_AD = 3;
-
-const getRowBasedList = list => {
-  const result = [];
-  let foodBuffer = [];
-  let rowIndex = 0;
-  let adIndex = 0;
-
-  list.forEach((item, index) => {
-    foodBuffer.push(item);
-
-    if (foodBuffer.length === ITEMS_PER_ROW) {
-      result.push({
-        type: 'row',
-        id: `row-${rowIndex}`,
-        items: [...foodBuffer],
-      });
-      foodBuffer = [];
-      rowIndex++;
-
-      if (rowIndex % ROWS_PER_AD === 0 && index < list.length - 1) {
-        result.push({
-          type: 'ad',
-          id: `ad-${rowIndex}`,
-          adIndex: adIndex,
-        });
-        adIndex++;
-      }
-    }
-  });
-
-  if (foodBuffer.length > 0) {
-    result.push({
-      type: 'row',
-      id: `row-${rowIndex}`,
-      items: [...foodBuffer],
-    });
-  }
-
-  return result;
-};
+const ITEM_MARGIN = 8;
+const HORIZONTAL_PADDING = 16;
+const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING * 2 - ITEM_MARGIN) / 2;
 
 const RecipieScreen = props => {
   const navigation = useNavigation();
@@ -129,11 +94,6 @@ const RecipieScreen = props => {
     return result;
   }, [selectedCategorySlug, dietFilter]);
 
-  const currentList = useMemo(
-    () => getRowBasedList(filteredRecipes),
-    [filteredRecipes],
-  );
-
   const handleCategoryPress = categorySlug => {
     setSelectedCategorySlug(categorySlug);
   };
@@ -184,9 +144,54 @@ const RecipieScreen = props => {
     return PRODUCTION_AD_UNIT_IDS[adIndex % PRODUCTION_AD_UNIT_IDS.length];
   };
 
-  const renderFoodRow = items => {
+  const getRowBasedList = list => {
+    const result = [];
+    let foodBuffer = [];
+    let rowIndex = 0;
+    let adIndex = 0;
+
+    list.forEach((item, index) => {
+      foodBuffer.push(item);
+
+      if (foodBuffer.length === ITEMS_PER_ROW) {
+        result.push({
+          type: 'row',
+          id: `row-${rowIndex}`,
+          items: [...foodBuffer],
+        });
+        foodBuffer = [];
+        rowIndex++;
+
+        if (rowIndex % ROWS_PER_AD === 0 && index < list.length - 1) {
+          result.push({
+            type: 'ad',
+            id: `ad-${rowIndex}`,
+            adIndex: adIndex,
+          });
+          adIndex++;
+        }
+      }
+    });
+
+    if (foodBuffer.length > 0) {
+      result.push({
+        type: 'row',
+        id: `row-${rowIndex}`,
+        items: [...foodBuffer],
+      });
+    }
+
+    return result;
+  };
+
+  const currentList = useMemo(
+    () => getRowBasedList(filteredRecipes),
+    [filteredRecipes],
+  );
+
+  const renderFoodRow = (items, rowId) => {
     return (
-      <View style={HomeScreenStyle.foodRow}>
+      <View key={rowId} style={HomeScreenStyle.foodRow}>
         {items.map((food, index) => (
           <View
             key={food.id}
@@ -211,11 +216,11 @@ const RecipieScreen = props => {
     );
   };
 
-  const renderAd = adIndex => {
+  const renderAd = (adIndex, adId) => {
     const unitId = getAdUnitId(adIndex);
 
     return (
-      <View style={HomeScreenStyle.inFeedAdContainer}>
+      <View key={adId} style={HomeScreenStyle.inFeedAdContainer}>
         <BannerAdComponent
           size={BannerAdSize.MEDIUM_RECTANGLE}
           containerStyle={HomeScreenStyle.inFeedAd}
@@ -225,20 +230,12 @@ const RecipieScreen = props => {
     );
   };
 
-  const renderListItem = ({ item }) => {
-    if (item.type === 'ad') {
-      return renderAd();
+  const openDrawer = () => {
+    if (props?.props?.navigation?.openDrawer) {
+      props.props.navigation.openDrawer();
+    } else if (props?.navigation?.openDrawer) {
+      props.navigation.openDrawer();
     }
-
-    if (item.type === 'row') {
-      return renderFoodRow(item.items);
-    }
-
-    return null;
-  };
-
-  const renderListFooter = () => {
-    return <View style={{ height: 100 }} />;
   };
 
   return (
@@ -253,16 +250,25 @@ const RecipieScreen = props => {
         message={t('ads.loading') || 'Loading...'}
       />
 
-      <View style={HomeScreenStyle.fixedHeaderContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[1]}
+        contentContainerStyle={HomeScreenStyle.scrollContent}
+      >
         <View style={HomeScreenStyle.headerWrapper}>
           <View style={HomeScreenStyle.topBar}>
-            <View style={{ flex: 1 }}>
-              <Text style={HomeScreenStyle.greetingText}>
-                {getLocalizedGreeting},
-              </Text>
-              <Text style={HomeScreenStyle.mainTitleText}>
-                {t('home.whatDoYouWant')}
-              </Text>
+            <View style={HomeScreenStyle.topBarLeftContainer}>
+              <Pressable
+                style={HomeScreenStyle.drawerIconBtn}
+                onPress={openDrawer}
+              >
+                <Feather name="menu" size={22} color="#1A1A1A" />
+              </Pressable>
+              <View style={HomeScreenStyle.topBarLeft}>
+                <Text style={HomeScreenStyle.greetingText}>
+                  {getLocalizedGreeting}
+                </Text>
+              </View>
             </View>
 
             <View style={HomeScreenStyle.topBarRight}>
@@ -285,12 +291,6 @@ const RecipieScreen = props => {
                   {currentLanguage === 'en' ? '🇺🇸' : '🇮🇳'}
                 </Text>
               </TouchableOpacity>
-              <Image
-                source={{
-                  uri: 'https://static.vecteezy.com/system/resources/previews/019/900/322/non_2x/happy-young-cute-illustration-face-profile-png.png',
-                }}
-                style={HomeScreenStyle.profileImage}
-              />
             </View>
           </View>
 
@@ -301,7 +301,7 @@ const RecipieScreen = props => {
           </View>
         </View>
 
-        <View style={HomeScreenStyle.categorySection}>
+        <View style={HomeScreenStyle.stickyCategorySection}>
           <View style={HomeScreenStyle.sectionHeader}>
             <Text style={HomeScreenStyle.sectionTitle}>
               {t('home.topCategories')}
@@ -311,41 +311,44 @@ const RecipieScreen = props => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={HomeScreenStyle.categoryListContainer}
-          >
-            {categories.map(category => {
-              const isSelected = selectedCategorySlug === category.category;
-              return (
-                <Chip
-                  key={category.category}
-                  label={getLocalizedCategoryName(category.category)}
-                  selected={isSelected}
-                  onPress={() => handleCategoryPress(category.category)}
-                  showBorder={true}
-                />
-              );
-            })}
-          </ScrollView>
+          <View style={HomeScreenStyle.categoryChipRow}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={HomeScreenStyle.categoryListContainer}
+            >
+              {categories.map(category => {
+                const isSelected = selectedCategorySlug === category.category;
+                return (
+                  <Chip
+                    key={category.category}
+                    label={getLocalizedCategoryName(category.category)}
+                    selected={isSelected}
+                    onPress={() => handleCategoryPress(category.category)}
+                    showBorder={true}
+                  />
+                );
+              })}
+            </ScrollView>
+          </View>
         </View>
-      </View>
 
-      <View style={HomeScreenStyle.recipeListContainer}>
-        <FlatList
-          data={currentList}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={HomeScreenStyle.flatListContent}
-          renderItem={renderListItem}
-          ListFooterComponent={renderListFooter}
-          removeClippedSubviews={true}
-          maxToRenderPerBatch={10}
-          windowSize={10}
-          initialNumToRender={6}
-        />
-      </View>
+        <View style={HomeScreenStyle.recipesContainer}>
+          {currentList.map(item => {
+            if (item.type === 'ad') {
+              return renderAd(item.adIndex, item.id);
+            }
+
+            if (item.type === 'row') {
+              return renderFoodRow(item.items, item.id);
+            }
+
+            return null;
+          })}
+
+          <View style={{ height: 150 }} />
+        </View>
+      </ScrollView>
 
       <View style={HomeScreenStyle.bottomBannerContainer}>
         <BannerAdComponent

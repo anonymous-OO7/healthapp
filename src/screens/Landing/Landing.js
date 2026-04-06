@@ -62,7 +62,7 @@ const LandingScreen = () => {
       flatListRef?.current?.scrollToOffset({ offset });
       setCurrentSlideIndex(nextSlideIndex);
     } else {
-      navigation.replace('DashBoard');
+      navigation.replace('DrawerPage');
     }
   };
 

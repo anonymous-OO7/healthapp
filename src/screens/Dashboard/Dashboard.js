@@ -23,6 +23,7 @@ const COLORS = {
 const Tab = createBottomTabNavigator();
 
 const DashBoard = props => {
+  console.log('🚀 ~ file: Dashboard.js:17 ~ DashBoard ~ props:', props);
   const renderIcon = (IconComponent, focused, label) => (
     <View style={styles.iconContainer}>
       <View style={[styles.iconWrapper, focused && styles.iconActiveContainer]}>
@@ -50,7 +51,7 @@ const DashBoard = props => {
     >
       <Tab.Screen
         name="Home"
-        children={() => <WorkoutHomeScreen {...props} />}
+        children={() => <WorkoutHomeScreen props={props} />}
         options={{
           tabBarIcon: ({ focused }) => renderIcon(HomeIcon, focused, 'Home'),
         }}
@@ -58,7 +59,7 @@ const DashBoard = props => {
 
       <Tab.Screen
         name="Cook"
-        children={() => <RecipieScreen {...props} />}
+        children={() => <RecipieScreen props={props} />}
         options={{
           tabBarIcon: ({ focused }) =>
             renderIcon(WorkoutIconSvg, focused, 'Cook'),
@@ -66,7 +67,7 @@ const DashBoard = props => {
       />
       <Tab.Screen
         name="CartScreen"
-        children={() => <CartScreen {...props} />}
+        children={() => <CartScreen props={props} />}
         options={{
           tabBarIcon: ({ focused }) => renderIcon(CartIcon, focused, 'Shop'),
         }}
@@ -74,7 +75,7 @@ const DashBoard = props => {
 
       <Tab.Screen
         name="SettingsScreen"
-        children={() => <Comingsoon {...props} />}
+        children={() => <Comingsoon props={props} />}
         options={{
           tabBarIcon: ({ focused }) =>
             renderIcon(SettingsIcon, focused, 'Settings'),

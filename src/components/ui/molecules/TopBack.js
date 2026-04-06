@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   FlatList,
   View,
@@ -8,21 +8,21 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-} from "react-native";
+} from 'react-native';
 
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
-} from "react-native-responsive-dimensions";
-import { BackSvg } from "../../assets/svgs/SvgImages";
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-const fontScale = Dimensions.get("window").fontScale;
-import { Colors } from "../../assets/colors";
-import LogoViewer from "../common/LogoViewer";
+} from 'react-native-responsive-dimensions';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const fontScale = Dimensions.get('window').fontScale;
+import LogoViewer from '../common/LogoViewer';
+import { BackSvg } from '../../../assets/images/SvgImages';
+import { Colors } from '../../../assets/colors';
 
-const TopBack = ({ props, heading = "Add new client" }) => {
+const TopBack = ({ props, heading = 'Add new client' }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topCtn}>
@@ -46,23 +46,23 @@ const TopBack = ({ props, heading = "Add new client" }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     width: windowWidth,
   },
   topCtn: {
     backgroundColor: Colors.white,
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
     width: windowWidth,
     marginTop: responsiveHeight(1),
-    alignItems: "center",
+    alignItems: 'center',
   },
   logoImgContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: responsiveWidth(5),
     marginLeft: responsiveWidth(1),
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     height: responsiveHeight(6),
     width: responsiveWidth(10),
   },
@@ -71,10 +71,10 @@ const styles = StyleSheet.create({
     width: responsiveWidth(6),
   },
   profileButton: {
-    overflow: "hidden",
-    alignItems: "center",
-    position: "relative",
-    backgroundColor: "white",
+    overflow: 'hidden',
+    alignItems: 'center',
+    position: 'relative',
+    backgroundColor: 'white',
     height: responsiveHeight(6),
     width: responsiveHeight(6),
     borderRadius: responsiveHeight(6),
@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
   },
   headText: {
     fontSize: responsiveFontSize(2.2),
-    fontFamily: "Rubik-Regular",
-    color: "black",
+    fontFamily: 'Rubik-Regular',
+    color: 'black',
     width: responsiveWidth(82),
     marginLeft: responsiveWidth(2),
   },

@@ -10,6 +10,7 @@ import LandingScreen from '../screens/Landing/Landing.js';
 import CartScreen from '../../src/screens/CartScreen/CartScreen.js';
 import HealthHistoryScreen from '../../src/screens/HealthHistory/HealthHistoryScreen.js';
 import WorkoutCompleteScreen from '../../src/screens/WorkoutScreens/WorkoutCompleteScreen.js';
+import DrawerPage from '../screens/DrawerPage/DrawerPage.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const AppStack = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
     >
+      <Stack.Screen name="DrawerPage" component={DrawerPage} />
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="DashBoard" component={DashBoard} />
       <Stack.Screen name="HomeScreen" component={RecipieScreen} />

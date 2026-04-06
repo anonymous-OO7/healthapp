@@ -17,9 +17,12 @@ import { AdService } from './src/components/molecules/AdService';
 import { ConsentService } from './src/components/molecules/ConsentService';
 import { FitnessContext } from './src/context/Context';
 import { ThemeProvider, useTheme } from './src/themes';
+import useSimpleInAppUpdate from './src/hooks/useSimpleInAppUpdate';
 
 const LoadingScreen = () => {
   const { colors } = useTheme();
+  useSimpleInAppUpdate();
+
   return (
     <View
       style={[styles.loadingContainer, { backgroundColor: colors.background }]}
